@@ -8,9 +8,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -62,6 +60,10 @@
       font-size: 16px;
     }
 
+    input[type="file"] {
+      padding: 12px;
+    }
+
     button {
       width: 100%;
       padding: 15px;
@@ -72,6 +74,7 @@
       color: #07140f;
       font-size: 16px;
       font-weight: bold;
+      cursor: pointer;
     }
 
     button.secondary {
@@ -95,9 +98,46 @@
       display: none;
     }
 
-    #message {
+    .success {
+      color: #31b97d;
+      font-weight: bold;
       margin-top: 15px;
+    }
+
+    .error {
       color: #ff9c73;
+      margin-top: 15px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .stat {
+      background: #0d1916;
+      border-radius: 15px;
+      padding: 15px;
+    }
+
+    .statValue {
+      font-size: 21px;
+      font-weight: bold;
+      color: #31b97d;
+    }
+
+    .statLabel {
+      font-size: 11px;
+      color: #9db1ab;
+      margin-top: 5px;
+    }
+
+    .filename {
+      word-break: break-word;
+      font-weight: bold;
+      margin-top: 10px;
     }
   </style>
 </head>
@@ -133,11 +173,11 @@
       placeholder="Passwort"
     >
 
-    <button onclick="login()">
+    <button id="loginButton">
       Einloggen
     </button>
 
-    <div id="message"></div>
+    <div id="loginMessage"></div>
 
   </div>
 
@@ -167,25 +207,102 @@
     </div>
 
 
+    <!-- IGC UPLOAD -->
+
     <div class="card">
 
-      <h2>🪂 Flug hochladen</h2>
+      <div class="small">
+        FLUG ANALYSIEREN
+      </div>
+
+      <h2>🪂 IGC hochladen</h2>
 
       <p class="small">
-        Bald kannst du hier deine IGC-Datei analysieren
-        und Coins verdienen.
+        Wähle eine IGC-Datei von deinem Vario aus.
+        Die Datei wird direkt auf deinem Gerät analysiert.
       </p>
 
-      <button disabled>
-        IGC Upload – kommt als Nächstes
+      <input
+        id="igcFile"
+        type="file"
+        accept=".igc,text/plain"
+      >
+
+      <button id="analyzeButton">
+        IGC analysieren
       </button>
+
+      <div id="igcMessage"></div>
+
+    </div>
+
+
+    <!-- FLUGERGEBNIS -->
+
+    <div id="flightResult" class="card hidden">
+
+      <div class="small">
+        FLUG ERKANNT
+      </div>
+
+      <div id="flightName" class="filename">
+        -
+      </div>
+
+      <div class="stats">
+
+        <div class="stat">
+          <div id="trackpoints" class="statValue">
+            0
+          </div>
+          <div class="statLabel">
+            TRACKPUNKTE
+          </div>
+        </div>
+
+        <div class="stat">
+          <div id="duration" class="statValue">
+            -
+          </div>
+          <div class="statLabel">
+            FLUGDAUER
+          </div>
+        </div>
+
+        <div class="stat">
+          <div id="maxAltitude" class="statValue">
+            -
+          </div>
+          <div class="statLabel">
+            MAX. HÖHE
+          </div>
+        </div>
+
+        <div class="stat">
+          <div id="positiveGain" class="statValue">
+            -
+          </div>
+          <div class="statLabel">
+            ROHER HÖHENGEWINN
+          </div>
+        </div>
+
+      </div>
+
+      <p id="coordinates" class="small"></p>
+
+      <p class="small">
+        Hinweis: Der Höhengewinn ist momentan nur eine
+        technische Rohberechnung. Die echte
+        Thermikerkennung kommt im nächsten Schritt.
+      </p>
 
     </div>
 
 
     <button
+      id="logoutButton"
       class="secondary"
-      onclick="logout()"
     >
       Ausloggen
     </button>
@@ -198,44 +315,60 @@
 <script>
 
 const SUPABASE_URL =
-"https://fdgslnifqifhormvogyn.supabase.co";
+  "https://fdgslnifqifhormvogyn.supabase.co";
 
 const SUPABASE_KEY =
-"sb_publishable_9ZaI8qL-NMYug_xOUaWwtA_M5otiMAV";
+  "sb_publishable_9ZaI8qL-NMYug_xOUaWwtA_M5otiMAV";
 
 
-const client =
-supabase.createClient(
+const client = supabase.createClient(
   SUPABASE_URL,
   SUPABASE_KEY
 );
 
 
 
+/* ==========================
+   LOGIN
+========================== */
+
 async function login() {
 
   const email =
-    document.getElementById("email").value;
+    document.getElementById("email").value.trim();
 
   const password =
     document.getElementById("password").value;
 
   const message =
-    document.getElementById("message");
+    document.getElementById("loginMessage");
 
+
+  if (!email || !password) {
+
+    message.className = "error";
+    message.innerText =
+      "Bitte E-Mail und Passwort eingeben.";
+
+    return;
+  }
+
+
+  message.className = "small";
   message.innerText =
     "Einloggen...";
 
 
   const { data, error } =
     await client.auth.signInWithPassword({
-      email: email,
-      password: password
+      email,
+      password
     });
 
 
   if (error) {
 
+    message.className = "error";
     message.innerText =
       "Fehler: " + error.message;
 
@@ -245,13 +378,17 @@ async function login() {
 
   message.innerText = "";
 
-  loadProfile(
+  await loadProfile(
     data.user.id
   );
 
 }
 
 
+
+/* ==========================
+   PROFIL
+========================== */
 
 async function loadProfile(userId) {
 
@@ -303,9 +440,14 @@ async function loadProfile(userId) {
 
 
 
+/* ==========================
+   LOGOUT
+========================== */
+
 async function logout() {
 
   await client.auth.signOut();
+
 
   document.getElementById(
     "dashboard"
@@ -320,9 +462,20 @@ async function logout() {
     "hidden"
   );
 
+
+  document.getElementById(
+    "flightResult"
+  ).classList.add(
+    "hidden"
+  );
+
 }
 
 
+
+/* ==========================
+   SESSION
+========================== */
 
 async function checkSession() {
 
@@ -332,7 +485,7 @@ async function checkSession() {
 
   if (data.session) {
 
-    loadProfile(
+    await loadProfile(
       data.session.user.id
     );
 
@@ -340,6 +493,490 @@ async function checkSession() {
 
 }
 
+
+
+/* ==========================
+   IGC KOORDINATEN
+========================== */
+
+function parseCoordinate(
+  raw,
+  degreeLength
+) {
+
+  const degrees =
+    Number(
+      raw.slice(
+        0,
+        degreeLength
+      )
+    );
+
+
+  const minutesRaw =
+    Number(
+      raw.slice(
+        degreeLength
+      )
+    );
+
+
+  const minutes =
+    minutesRaw / 1000;
+
+
+  return (
+    degrees +
+    minutes / 60
+  );
+
+}
+
+
+
+/* ==========================
+   IGC B-RECORD
+========================== */
+
+function parseBRecord(line) {
+
+  if (!line.startsWith("B")) {
+    return null;
+  }
+
+
+  if (line.length < 35) {
+    return null;
+  }
+
+
+  const hour =
+    Number(
+      line.slice(1, 3)
+    );
+
+  const minute =
+    Number(
+      line.slice(3, 5)
+    );
+
+  const second =
+    Number(
+      line.slice(5, 7)
+    );
+
+
+  let latitude =
+    parseCoordinate(
+      line.slice(7, 14),
+      2
+    );
+
+
+  if (
+    line.slice(14, 15) === "S"
+  ) {
+
+    latitude =
+      -latitude;
+
+  }
+
+
+  let longitude =
+    parseCoordinate(
+      line.slice(15, 23),
+      3
+    );
+
+
+  if (
+    line.slice(23, 24) === "W"
+  ) {
+
+    longitude =
+      -longitude;
+
+  }
+
+
+  const pressureAltitude =
+    Number(
+      line.slice(25, 30)
+    );
+
+
+  const gpsAltitude =
+    Number(
+      line.slice(30, 35)
+    );
+
+
+  const altitude =
+    Number.isFinite(gpsAltitude)
+      ? gpsAltitude
+      : pressureAltitude;
+
+
+  return {
+
+    seconds:
+      hour * 3600 +
+      minute * 60 +
+      second,
+
+    latitude,
+
+    longitude,
+
+    altitude
+
+  };
+
+}
+
+
+
+/* ==========================
+   ZEIT FORMATIEREN
+========================== */
+
+function formatDuration(seconds) {
+
+  const hours =
+    Math.floor(
+      seconds / 3600
+    );
+
+
+  const minutes =
+    Math.floor(
+      (seconds % 3600) / 60
+    );
+
+
+  if (hours > 0) {
+
+    return (
+      hours +
+      " h " +
+      minutes +
+      " min"
+    );
+
+  }
+
+
+  return (
+    minutes +
+    " min"
+  );
+
+}
+
+
+
+/* ==========================
+   IGC ANALYSE
+========================== */
+
+async function analyzeIGC() {
+
+  const input =
+    document.getElementById(
+      "igcFile"
+    );
+
+
+  const message =
+    document.getElementById(
+      "igcMessage"
+    );
+
+
+  const result =
+    document.getElementById(
+      "flightResult"
+    );
+
+
+  const file =
+    input.files[0];
+
+
+  if (!file) {
+
+    message.className =
+      "error";
+
+    message.innerText =
+      "Bitte zuerst eine IGC-Datei auswählen.";
+
+    return;
+
+  }
+
+
+  message.className =
+    "small";
+
+  message.innerText =
+    "Flug wird analysiert...";
+
+
+  try {
+
+    const text =
+      await file.text();
+
+
+    const lines =
+      text.split(/\r?\n/);
+
+
+    const points = [];
+
+
+    for (
+      const line of lines
+    ) {
+
+      const point =
+        parseBRecord(
+          line
+        );
+
+
+      if (point) {
+
+        points.push(
+          point
+        );
+
+      }
+
+    }
+
+
+    if (
+      points.length < 2
+    ) {
+
+      throw new Error(
+        "Keine gültigen Trackpunkte gefunden."
+      );
+
+    }
+
+
+    /* Flugzeit */
+
+    let duration =
+      points[
+        points.length - 1
+      ].seconds -
+      points[0].seconds;
+
+
+    if (
+      duration < 0
+    ) {
+
+      duration +=
+        86400;
+
+    }
+
+
+
+    /* Höhenwerte */
+
+    let maxAltitude =
+      -Infinity;
+
+
+    let positiveGain =
+      0;
+
+
+    for (
+      let i = 0;
+      i < points.length;
+      i++
+    ) {
+
+      const altitude =
+        points[i].altitude;
+
+
+      if (
+        altitude >
+        maxAltitude
+      ) {
+
+        maxAltitude =
+          altitude;
+
+      }
+
+
+      if (
+        i > 0
+      ) {
+
+        const difference =
+          points[i].altitude -
+          points[i - 1].altitude;
+
+
+        if (
+          difference > 0
+        ) {
+
+          positiveGain +=
+            difference;
+
+        }
+
+      }
+
+    }
+
+
+
+    /* Ergebnis anzeigen */
+
+    document.getElementById(
+      "flightName"
+    ).innerText =
+      file.name;
+
+
+    document.getElementById(
+      "trackpoints"
+    ).innerText =
+      points.length.toLocaleString(
+        "de-DE"
+      );
+
+
+    document.getElementById(
+      "duration"
+    ).innerText =
+      formatDuration(
+        duration
+      );
+
+
+    document.getElementById(
+      "maxAltitude"
+    ).innerText =
+      Math.round(
+        maxAltitude
+      ) + " m";
+
+
+    document.getElementById(
+      "positiveGain"
+    ).innerText =
+      "+" +
+      Math.round(
+        positiveGain
+      ) +
+      " m";
+
+
+    const start =
+      points[0];
+
+
+    const end =
+      points[
+        points.length - 1
+      ];
+
+
+    document.getElementById(
+      "coordinates"
+    ).innerText =
+
+      "Start: " +
+      start.latitude.toFixed(4) +
+      ", " +
+      start.longitude.toFixed(4) +
+      "\nEnde: " +
+      end.latitude.toFixed(4) +
+      ", " +
+      end.longitude.toFixed(4);
+
+
+    result.classList.remove(
+      "hidden"
+    );
+
+
+    message.className =
+      "success";
+
+    message.innerText =
+      "✓ IGC-Datei erfolgreich eingelesen.";
+
+
+  }
+
+  catch (error) {
+
+    result.classList.add(
+      "hidden"
+    );
+
+
+    message.className =
+      "error";
+
+
+    message.innerText =
+      "Fehler: " +
+      error.message;
+
+  }
+
+}
+
+
+
+/* ==========================
+   BUTTONS
+========================== */
+
+document.getElementById(
+  "loginButton"
+).addEventListener(
+  "click",
+  login
+);
+
+
+document.getElementById(
+  "logoutButton"
+).addEventListener(
+  "click",
+  logout
+);
+
+
+document.getElementById(
+  "analyzeButton"
+).addEventListener(
+  "click",
+  analyzeIGC
+);
+
+
+
+/* ==========================
+   START
+========================== */
 
 checkSession();
 
