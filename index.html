@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thermal Tycoon</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #07110f;
+      color: white;
+    }
+
+    .app {
+      max-width: 480px;
+      margin: auto;
+      min-height: 100vh;
+      padding: 28px 20px;
+    }
+
+    .logo {
+      color: #31b97d;
+      font-weight: bold;
+      letter-spacing: 2px;
+      font-size: 13px;
+    }
+
+    h1 {
+      font-size: 34px;
+      margin: 8px 0;
+    }
+
+    .subtitle {
+      color: #9db1ab;
+      margin-bottom: 30px;
+    }
+
+    .card {
+      background: #13231f;
+      border: 1px solid #274039;
+      border-radius: 22px;
+      padding: 22px;
+      margin-top: 18px;
+    }
+
+    input {
+      width: 100%;
+      padding: 15px;
+      margin-top: 10px;
+      border-radius: 12px;
+      border: 1px solid #355249;
+      background: #0d1916;
+      color: white;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      margin-top: 14px;
+      border: 0;
+      border-radius: 12px;
+      background: #31b97d;
+      color: #07140f;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    button.secondary {
+      background: #20352f;
+      color: white;
+    }
+
+    .coins {
+      font-size: 48px;
+      font-weight: bold;
+      color: #31b97d;
+      margin: 15px 0;
+    }
+
+    .small {
+      color: #9db1ab;
+      font-size: 13px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    #message {
+      margin-top: 15px;
+      color: #ff9c73;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <div class="logo">THERMAL TYCOON</div>
+
+  <h1>Fly. Discover. Own.</h1>
+
+  <div class="subtitle">
+    Verwandle deine Paragliding-Flüge in ein Spiel.
+  </div>
+
+
+  <!-- LOGIN -->
+
+  <div id="loginBox" class="card">
+
+    <h2>Login</h2>
+
+    <input
+      id="email"
+      type="email"
+      placeholder="E-Mail"
+    >
+
+    <input
+      id="password"
+      type="password"
+      placeholder="Passwort"
+    >
+
+    <button onclick="login()">
+      Einloggen
+    </button>
+
+    <div id="message"></div>
+
+  </div>
+
+
+  <!-- DASHBOARD -->
+
+  <div id="dashboard" class="hidden">
+
+    <div class="card">
+
+      <div class="small">
+        PILOT
+      </div>
+
+      <h2 id="username">
+        Pilot
+      </h2>
+
+      <div class="small">
+        DEIN GUTHABEN
+      </div>
+
+      <div class="coins">
+        <span id="coins">0</span> 🪙
+      </div>
+
+    </div>
+
+
+    <div class="card">
+
+      <h2>🪂 Flug hochladen</h2>
+
+      <p class="small">
+        Bald kannst du hier deine IGC-Datei analysieren
+        und Coins verdienen.
+      </p>
+
+      <button disabled>
+        IGC Upload – kommt als Nächstes
+      </button>
+
+    </div>
+
+
+    <button
+      class="secondary"
+      onclick="logout()"
+    >
+      Ausloggen
+    </button>
+
+  </div>
+
+</div>
+
+
+<script>
+
+const SUPABASE_URL =
+"https://fdgslnifqifhormvogyn.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_9ZaI8qL-NMYug_xOUaWwtA_M5otiMAV";
+
+
+const client =
+supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+
+
+async function login() {
+
+  const email =
+    document.getElementById("email").value;
+
+  const password =
+    document.getElementById("password").value;
+
+  const message =
+    document.getElementById("message");
+
+  message.innerText =
+    "Einloggen...";
+
+
+  const { data, error } =
+    await client.auth.signInWithPassword({
+      email: email,
+      password: password
+    });
+
+
+  if (error) {
+
+    message.innerText =
+      "Fehler: " + error.message;
+
+    return;
+  }
+
+
+  message.innerText = "";
+
+  loadProfile(
+    data.user.id
+  );
+
+}
+
+
+
+async function loadProfile(userId) {
+
+  const { data, error } =
+    await client
+      .from("profiles")
+      .select("username, coins")
+      .eq("id", userId)
+      .single();
+
+
+  if (error) {
+
+    alert(
+      "Profil konnte nicht geladen werden: "
+      + error.message
+    );
+
+    return;
+  }
+
+
+  document.getElementById(
+    "username"
+  ).innerText =
+    data.username;
+
+
+  document.getElementById(
+    "coins"
+  ).innerText =
+    data.coins;
+
+
+  document.getElementById(
+    "loginBox"
+  ).classList.add(
+    "hidden"
+  );
+
+
+  document.getElementById(
+    "dashboard"
+  ).classList.remove(
+    "hidden"
+  );
+
+}
+
+
+
+async function logout() {
+
+  await client.auth.signOut();
+
+  document.getElementById(
+    "dashboard"
+  ).classList.add(
+    "hidden"
+  );
+
+
+  document.getElementById(
+    "loginBox"
+  ).classList.remove(
+    "hidden"
+  );
+
+}
+
+
+
+async function checkSession() {
+
+  const { data } =
+    await client.auth.getSession();
+
+
+  if (data.session) {
+
+    loadProfile(
+      data.session.user.id
+    );
+
+  }
+
+}
+
+
+checkSession();
+
+</script>
+
+</body>
+</html>
