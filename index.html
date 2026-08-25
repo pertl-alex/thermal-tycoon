@@ -57,6 +57,8 @@ function ttThermalIcon(state) {
 .tt-thermal-ring.other { border-color:#777d80; background:rgba(255,255,255,.10); }
 .tt-thermal-ring.explored { border-color:#111; background:rgba(255,255,255,.10); }
 
+
+.tt-buy-btn{display:block;width:100%;margin-top:12px;padding:11px 12px;border:0;border-radius:12px;background:#31bb7d;color:#07140f;font-weight:900;font-size:14px;cursor:pointer}
 </style>
   <div class="tt-shell">
     <div class="tt-top"><div class="tt-brand">THERMAL TYCOON</div><div style="float:right;font-size:13px;font-weight:800"><span id="liveUsername">Pilot</span> · <span id="liveCoins">0</span> 🪙</div><div class="tt-title" id="screenTitle">Thermik-Karte</div><div class="tt-sub" id="screenSub">Fliegen. Entdecken. Besitzen.</div><button id="logoutSubmit" type="button" style="margin-top:8px;border:0;background:transparent;color:#31b97d;font-weight:800;padding:0">Ausloggen</button></div>
@@ -104,13 +106,18 @@ valid.forEach((s,i)=>{
     statusText='Thermik eines anderen Piloten';
   }
 
+  const buyButton = state==='explored'
+    ? '<button class="tt-buy-btn" onclick="window.buyThermalSpot('+Number(s.id)+')">Für 100 🪙 kaufen</button>'
+    : '';
+
   const popup =
     '<b>'+title+'</b><br>'+
     statusText+'<br>'+
     'Ø +'+avg.toFixed(1)+' m/s<br>'+
     'max +'+max.toFixed(1)+' m/s<br>'+
     'Radius Ø '+Math.round(radius)+' m<br>'+
-    count+' gespeicherte '+(count===1?'Nutzung':'Nutzungen');
+    count+' gespeicherte '+(count===1?'Nutzung':'Nutzungen')+
+    buyButton;
 
   // Gespeicherte Thermiken: NUR Status-Ring, keine Flamme und kein grüner Flächenkreis.
   const marker=L.marker([s._lat,s._lon],{
@@ -124,6 +131,21 @@ valid.forEach((s,i)=>{
 if(valid.length){flightMap.fitBounds(L.latLngBounds(valid.map(s=>[s._lat,s._lon])),{padding:[28,28],maxZoom:13});document.getElementById('mapHint').textContent=valid.length+' gespeicherte Thermik'+(valid.length===1?'':'en')+' aus Supabase geladen.'}else document.getElementById('mapHint').textContent='Noch keine gespeicherten Thermiken mit gültigen Koordinaten vorhanden.';
 setTimeout(()=>flightMap.invalidateSize(),100)
 }
+window.buyThermalSpot=async function(thermalId){
+  if(!currentUser){alert('Bitte zuerst anmelden.');return}
+  const {data,error}=await client.rpc('buy_thermal',{p_thermal_id:Number(thermalId)});
+  if(error){alert('Kauf fehlgeschlagen: '+error.message);return}
+  const result=Array.isArray(data)?data[0]:data;
+  if(!result||result.ok!==true){
+    alert((result&&result.message)||'Kauf nicht möglich.');
+    await loadSavedThermalSpots();
+    return;
+  }
+  document.getElementById('liveCoins').textContent=result.coins_left;
+  if(flightMap)flightMap.closePopup();
+  await loadSavedThermalSpots();
+  alert('Thermik gekauft! 🟢');
+};
 async function saveThermalSpots(thermals){
 const {data:{user},error:userError}=await client.auth.getUser();
 if(userError||!user) throw new Error('Nicht eingeloggt.');
