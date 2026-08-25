@@ -106,8 +106,9 @@ valid.forEach((s,i)=>{
     statusText='Thermik eines anderen Piloten';
   }
 
+  const price=thermalPriceFromMax(max);
   const buyButton = state==='explored'
-    ? '<button class="tt-buy-btn" onclick="window.buyThermalSpot('+Number(s.id)+')">Für 100 🪙 kaufen</button>'
+    ? '<button class="tt-buy-btn" onclick="window.buyThermalSpot('+Number(s.id)+')">Für '+price+' 🪙 kaufen</button>'
     : '';
 
   const popup =
@@ -182,4 +183,16 @@ if(inserted) spots.push(inserted);
 }
 root.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.go)));document.getElementById('openThermal').addEventListener('click',()=>go('thermal'));ensureMap();document.getElementById('claimBtn').addEventListener('click',e=>{e.currentTarget.textContent='Geclaimt ✓';e.currentTarget.disabled=true;document.getElementById('claimToast').classList.add('show')});document.getElementById('analyzeIgc').addEventListener('click',async()=>{const input=document.getElementById('igcFile'),toast=document.getElementById('igcToast'),file=input.files&&input.files[0];toast.classList.add('show');if(!file){toast.textContent='Bitte zuerst eine .igc-Datei auswählen.';return}try{const text=await file.text(),pts=text.split(/\r?\n/).map(parseB).filter(Boolean);if(pts.length<2){toast.textContent='Keine gültigen IGC-Trackpunkte gefunden.';document.getElementById('igcResult').style.display='none';document.getElementById('thermalResult').style.display='none';return}const duration=dt(pts[0],pts.at(-1)),maxAlt=Math.max(...pts.map(p=>p.alt)),thermals=detectThermals(pts),gain=thermals.reduce((n,t)=>n+t.gain,0);document.getElementById('igcName').textContent=file.name;document.getElementById('igcPoints').textContent=pts.length.toLocaleString('de-DE');document.getElementById('igcDuration').textContent=fmtTime(duration);document.getElementById('igcGain').textContent='+'+Math.round(gain)+' m';document.getElementById('igcMaxAlt').textContent=Math.round(maxAlt)+' m';document.getElementById('igcCoords').textContent='Start: '+pts[0].lat.toFixed(4)+', '+pts[0].lon.toFixed(4)+' · Ende: '+pts.at(-1).lat.toFixed(4)+', '+pts.at(-1).lon.toFixed(4);document.getElementById('igcResult').style.display='block';document.getElementById('thermalResult').style.display='block';document.getElementById('thermalCount').textContent=thermals.length+' '+(thermals.length===1?'Thermik':'Thermiken');document.querySelector('#thermalResult p.muted').textContent='Mindestens 2 Kreise, ca. 55 Sekunden, +35 m Höhengewinn und Ø +0,45 m/s. GPS-Kreisradius wird geprüft; kurze Unterbrechungen derselben Thermik werden zusammengeführt.';document.getElementById('thermalList').innerHTML=thermals.length?thermals.map((t,i)=>'<div class="portfolio-item"><span><b>🔥 Thermik '+(i+1)+'</b><br><small class="muted">'+t.lat.toFixed(4)+', '+t.lon.toFixed(4)+' · '+fmtTime(t.dur)+' · '+t.rotations.toFixed(1)+' Kreise · Radius Ø '+Math.round(t.radius)+' m</small></span><span style="text-align:right"><b>+'+Math.round(t.gain)+' m</b><br><small class="gain">Ø +'+t.avg.toFixed(1)+' m/s · max +'+t.maxClimb.toFixed(1)+'</small></span></div>').join(''):'<p class="muted">Keine ausreichend lange und räumlich plausible Kreis-Steigphase erkannt.</p>';renderFlightMap(pts,thermals);try{await saveThermalSpots(thermals);toast.textContent='✓ IGC analysiert: '+thermals.length+' Thermiken erkannt und gespeichert.';await loadSavedThermalSpots()}catch(dbErr){console.error(dbErr);toast.textContent='✓ IGC analysiert, aber Speichern fehlgeschlagen: '+dbErr.message;}}catch(err){toast.textContent='Datei konnte nicht gelesen werden.'}})})();
   </script>
-</div>
+</div
+function thermalPriceFromMax(maxClimb){
+  const m=Number(maxClimb)||0;
+  if(m<1) return 50;
+  if(m<2) return 100;
+  if(m<3) return 150;
+  if(m<4) return 200;
+  if(m<5) return 300;
+  if(m<6) return 400;
+  return 500;
+}
+
+>
