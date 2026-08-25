@@ -83,7 +83,42 @@ const {data,error}=await client.from('thermal_spots').select('id,lat,lon,radius_
 if(error){console.error(error);document.getElementById('mapHint').textContent='Supabase-Ladefehler: '+error.message;return}
 thermalLayers.forEach(x=>flightMap.removeLayer(x));thermalLayers=[];
 const valid=(data||[]).map(s=>({...s,_lat:Number(s.lat),_lon:Number(s.lon)})).filter(s=>Number.isFinite(s._lat)&&Number.isFinite(s._lon));
-valid.forEach((s,i)=>{const radius=Math.max(35,Math.min(220,Number(s.radius_m)||60)),avg=Number(s.avg_climb)||0,max=Number(s.max_climb)||0,count=Number(s.flight_count)||1,title=s.name||('Thermik #'+s.id),popup='<b>🔥 '+title+'</b><br>Ø +'+avg.toFixed(1)+' m/s<br>max +'+max.toFixed(1)+' m/s<br>Radius Ø '+Math.round(radius)+' m<br>'+count+' gespeicherte '+(count===1?'Nutzung':'Nutzungen');const c=L.circle([s._lat,s._lon],{radius,weight:2,color:'#31b97d',fillColor:'#31b97d',fillOpacity:.14}).addTo(flightMap);c.bindPopup(popup);thermalLayers.push(c);const icon=L.divIcon({className:'tt-thermal-marker',html:'<div class="flame">🔥<span class="num">'+(i+1)+'</span></div>',iconSize:[42,42],iconAnchor:[21,21],popupAnchor:[0,-22]});const marker=L.marker([s._lat,s._lon],{icon}).addTo(flightMap);marker.bindPopup(popup);thermalLayers.push(marker)});
+valid.forEach((s,i)=>{
+  const avg=Number(s.avg_climb)||0,
+        max=Number(s.max_climb)||0,
+        count=Number(s.flight_count)||1,
+        radius=Math.max(35,Math.min(220,Number(s.radius_m)||60)),
+        title=s.name||('Thermik #'+s.id);
+
+  const uid = currentUser && currentUser.id ? currentUser.id : null;
+  let state='explored';
+  let statusText='Erforscht · noch nicht gekauft';
+
+  if (uid && s.owner_id===uid) {
+    state='mine';
+    statusText='Meine Thermik';
+  } else if (s.owner_id) {
+    state='other';
+    statusText='Thermik eines anderen Piloten';
+  }
+
+  const popup =
+    '<b>'+title+'</b><br>'+
+    statusText+'<br>'+
+    'Ø +'+avg.toFixed(1)+' m/s<br>'+
+    'max +'+max.toFixed(1)+' m/s<br>'+
+    'Radius Ø '+Math.round(radius)+' m<br>'+
+    count+' gespeicherte '+(count===1?'Nutzung':'Nutzungen');
+
+  // Gespeicherte Thermiken: NUR Status-Ring, keine Flamme und kein grüner Flächenkreis.
+  const marker=L.marker([s._lat,s._lon],{
+    icon:ttThermalIcon(state),
+    zIndexOffset: state==='mine' ? 300 : state==='explored' ? 200 : 100
+  }).addTo(flightMap);
+
+  marker.bindPopup(popup);
+  thermalLayers.push(marker);
+});
 if(valid.length){flightMap.fitBounds(L.latLngBounds(valid.map(s=>[s._lat,s._lon])),{padding:[28,28],maxZoom:13});document.getElementById('mapHint').textContent=valid.length+' gespeicherte Thermik'+(valid.length===1?'':'en')+' aus Supabase geladen.'}else document.getElementById('mapHint').textContent='Noch keine gespeicherten Thermiken mit gültigen Koordinaten vorhanden.';
 setTimeout(()=>flightMap.invalidateSize(),100)
 }
