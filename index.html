@@ -113,7 +113,7 @@ valid.forEach((s,i)=>{
   }
 
   const price=thermalPriceFromMax(max);
-  const buyButton=state==='explored'?'<button type="button" class="tt-buy-btn">Für '+price+' 🪙 kaufen</button>':'';
+  const buyButton=state==='explored'?'<button type="button" class="tt-buy-btn" onclick="window.buyThermalSpot('+Number(s.id)+')">Für '+price+' 🪙 kaufen</button>':'';
   const popup =
     '<b>'+title+'</b><br>'+
     statusText+'<br>'+
@@ -141,6 +141,31 @@ valid.forEach((s,i)=>{
 if(valid.length){flightMap.fitBounds(L.latLngBounds(valid.map(s=>[s._lat,s._lon])),{padding:[28,28],maxZoom:13});document.getElementById('mapHint').textContent=valid.length+' gespeicherte Thermik'+(valid.length===1?'':'en')+' aus Supabase geladen.'}else document.getElementById('mapHint').textContent='Noch keine gespeicherten Thermiken mit gültigen Koordinaten vorhanden.';
 setTimeout(()=>flightMap.invalidateSize(),100)
 }
+window.buyThermalSpot=async function(thermalId){
+  if(!currentUser){alert('Bitte zuerst anmelden.');return}
+
+  const {data,error}=await client.rpc('buy_thermal',{p_thermal_id:Number(thermalId)});
+  if(error){
+    alert('Kauf fehlgeschlagen: '+error.message);
+    return;
+  }
+
+  const result=Array.isArray(data)?data[0]:data;
+  if(!result||result.ok!==true){
+    alert((result&&result.message)||'Kauf nicht möglich.');
+    await loadSavedThermalSpots();
+    return;
+  }
+
+  if(result.coins_left!==undefined&&result.coins_left!==null){
+    document.getElementById('liveCoins').textContent=result.coins_left;
+  }
+
+  if(flightMap)flightMap.closePopup();
+  await loadSavedThermalSpots();
+  alert(result.message||'Thermik gekauft! 🟢');
+};
+
 async function saveThermalSpots(thermals){
 const {data:{user},error:userError}=await client.auth.getUser();
 if(userError||!user) throw new Error('Nicht eingeloggt.');
