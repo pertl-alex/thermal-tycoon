@@ -21,6 +21,24 @@ function ttThermalIcon(state) {
   });
 }
 
+
+// Leaflet-Fix: Karte nach Layout-/Tab-Wechsel vollständig neu berechnen.
+function refreshThermalMapSize() {
+  if (!flightMap) return;
+  requestAnimationFrame(() => {
+    flightMap.invalidateSize(true);
+    setTimeout(() => flightMap && flightMap.invalidateSize(true), 150);
+    setTimeout(() => flightMap && flightMap.invalidateSize(true), 500);
+  });
+}
+
+window.addEventListener('resize', refreshThermalMapSize);
+window.addEventListener('orientationchange', () => setTimeout(refreshThermalMapSize, 250));
+window.addEventListener('pageshow', refreshThermalMapSize);
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) refreshThermalMapSize();
+});
+
 </script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
