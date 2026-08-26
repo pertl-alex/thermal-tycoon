@@ -167,10 +167,36 @@ window.buyThermalSpot=async function(thermalId){
 };
 
 async function saveThermalSpots(thermals){
-  if(!currentUser||!thermals||!thermals.length)return {saved:0};
+  if(!currentUser||!thermals||!thermals.length)return {saved:0,skipped:0};
+
+  // v1.2: Vor dem Speichern Thermiken desselben IGC-Flugs zusammenfassen.
+  // Zwei Treffer gelten als derselbe Bart, wenn sich ihre realen Kreisbereiche
+  // überlappen bzw. ihre Mittelpunkte nur moderat auseinanderliegen.
+  // Der stärkere/maximale Steigwert bleibt dabei erhalten.
+  const candidates=[];
+  for(const th of thermals){
+    const cur={...th,radius:Number(th.radius)||60};
+    let match=-1,best=Infinity;
+    for(let i=0;i<candidates.length;i++){
+      const ex=candidates[i];
+      const d=distance(ex,cur);
+      const adaptive=Math.min(450,Math.max(180,(Number(ex.radius)||60)+(Number(cur.radius)||60)+80));
+      if(d<=adaptive&&d<best){match=i;best=d}
+    }
+    if(match<0){candidates.push(cur);continue}
+    const ex=candidates[match];
+    // Für die Position den stärkeren Treffer bevorzugen; Kennwerte konservativ mergen.
+    if(Number(cur.maxClimb)>Number(ex.maxClimb)){
+      ex.lat=cur.lat;ex.lon=cur.lon;
+    }
+    ex.maxClimb=Math.max(Number(ex.maxClimb)||0,Number(cur.maxClimb)||0);
+    ex.avg=Math.max(Number(ex.avg)||0,Number(cur.avg)||0);
+    ex.radius=Math.max(Number(ex.radius)||60,Number(cur.radius)||60);
+    ex.gain=Math.max(Number(ex.gain)||0,Number(cur.gain)||0);
+  }
 
   let saved=0;
-  for(const th of thermals){
+  for(const th of candidates){
     const {data,error}=await client.rpc('record_thermal_use',{
       p_lat:Number(th.lat),
       p_lon:Number(th.lon),
@@ -187,7 +213,7 @@ async function saveThermalSpots(thermals){
     const result=Array.isArray(data)?data[0]:data;
     if(result&&result.ok)saved++;
   }
-  return {saved};
+  return {saved,skipped:thermals.length-candidates.length};
 }
 
 root.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.go)));document.getElementById('openThermal').addEventListener('click',()=>go('thermal'));ensureMap();document.getElementById('claimBtn').addEventListener('click',e=>{e.currentTarget.textContent='Geclaimt ✓';e.currentTarget.disabled=true;document.getElementById('claimToast').classList.add('show')});document.getElementById('analyzeIgc').addEventListener('click',async()=>{const input=document.getElementById('igcFile'),toast=document.getElementById('igcToast'),file=input.files&&input.files[0];toast.classList.add('show');if(!file){toast.textContent='Bitte zuerst eine .igc-Datei auswählen.';return}try{const text=await file.text(),pts=text.split(/\r?\n/).map(parseB).filter(Boolean);if(pts.length<2){toast.textContent='Keine gültigen IGC-Trackpunkte gefunden.';document.getElementById('igcResult').style.display='none';document.getElementById('thermalResult').style.display='none';return}const duration=dt(pts[0],pts.at(-1)),maxAlt=Math.max(...pts.map(p=>p.alt)),thermals=detectThermals(pts),gain=thermals.reduce((n,t)=>n+t.gain,0);document.getElementById('igcName').textContent=file.name;document.getElementById('igcPoints').textContent=pts.length.toLocaleString('de-DE');document.getElementById('igcDuration').textContent=fmtTime(duration);document.getElementById('igcGain').textContent='+'+Math.round(gain)+' m';document.getElementById('igcMaxAlt').textContent=Math.round(maxAlt)+' m';document.getElementById('igcCoords').textContent='Start: '+pts[0].lat.toFixed(4)+', '+pts[0].lon.toFixed(4)+' · Ende: '+pts.at(-1).lat.toFixed(4)+', '+pts.at(-1).lon.toFixed(4);document.getElementById('igcResult').style.display='block';document.getElementById('thermalResult').style.display='block';document.getElementById('thermalCount').textContent=thermals.length+' '+(thermals.length===1?'Thermik':'Thermiken');document.querySelector('#thermalResult p.muted').textContent='Mindestens 2 Kreise, ca. 55 Sekunden, +35 m Höhengewinn und Ø +0,45 m/s. GPS-Kreisradius wird geprüft; kurze Unterbrechungen derselben Thermik werden zusammengeführt.';document.getElementById('thermalList').innerHTML=thermals.length?thermals.map((t,i)=>'<div class="portfolio-item"><span><b>🔥 Thermik '+(i+1)+'</b><br><small class="muted">'+t.lat.toFixed(4)+', '+t.lon.toFixed(4)+' · '+fmtTime(t.dur)+' · '+t.rotations.toFixed(1)+' Kreise · Radius Ø '+Math.round(t.radius)+' m</small></span><span style="text-align:right"><b>+'+Math.round(t.gain)+' m</b><br><small class="gain">Ø +'+t.avg.toFixed(1)+' m/s · max +'+t.maxClimb.toFixed(1)+'</small></span></div>').join(''):'<p class="muted">Keine ausreichend lange und räumlich plausible Kreis-Steigphase erkannt.</p>';renderFlightMap(pts,thermals);try{await saveThermalSpots(thermals);toast.textContent='✓ IGC analysiert: '+thermals.length+' Thermiken erkannt und gespeichert.'}catch(dbErr){console.error(dbErr);toast.textContent='✓ IGC analysiert, aber Speichern fehlgeschlagen: '+dbErr.message;}}catch(err){toast.textContent='Datei konnte nicht gelesen werden.'}})})();
