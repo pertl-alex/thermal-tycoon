@@ -90,7 +90,26 @@ function ttThermalIcon(state) {
 .tt-sheet-owner{padding:11px 2px 4px;color:#5e6b65;font-size:13px}
 .tt-sheet-buy{width:100%;margin-top:12px;padding:14px;border:0;border-radius:16px;background:#31b97d;color:#07140f;font-size:16px;font-weight:900}
 @media(min-width:700px){.tt-sheet{bottom:20px;border-radius:26px}}
-.tt-dropzone{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:145px;margin:14px 0 9px;border:2px dashed #b9cbc5;border-radius:20px;background:#f2f7f5;cursor:pointer;padding:18px;box-sizing:border-box}.tt-drop-icon{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;background:#31b97d;color:#07140f;font-size:28px;margin-bottom:9px}.tt-dropzone>span:last-child{font-size:11px;margin-top:4px;color:#6c7b77}.tt-selected-file{font-size:12px;color:#65746f;margin:0 2px 12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tt-flight-result-head{display:flex;justify-content:space-between;gap:12px}.tt-flight-score{min-width:72px;text-align:center;background:#31b97d18;border-radius:16px;padding:10px 8px}.tt-flight-score strong{display:block;color:#31b97d;font-size:26px}.tt-flight-score span{font-size:10px}.tt-flight-mainstats,.tt-flight-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0 9px}.tt-flight-mainstats>div,.tt-flight-summary>div{background:#edf3f0;border-radius:16px;padding:12px 7px;text-align:center}.tt-flight-mainstats strong,.tt-flight-summary strong{display:block;font-size:16px}.tt-flight-mainstats span,.tt-flight-summary small{display:block;font-size:9px;color:#687873;margin-top:3px}.tt-flight-summary span{display:block;font-size:18px}.tt-flight-meta{text-align:center;font-size:11px;color:#687873;margin:4px 0 12px}</style>
+.tt-dropzone{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:145px;margin:14px 0 9px;border:2px dashed #b9cbc5;border-radius:20px;background:#f2f7f5;cursor:pointer;padding:18px;box-sizing:border-box}.tt-drop-icon{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;background:#31b97d;color:#07140f;font-size:28px;margin-bottom:9px}.tt-dropzone>span:last-child{font-size:11px;margin-top:4px;color:#6c7b77}.tt-selected-file{font-size:12px;color:#65746f;margin:0 2px 12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tt-flight-result-head{display:flex;justify-content:space-between;gap:12px}.tt-flight-score{min-width:72px;text-align:center;background:#31b97d18;border-radius:16px;padding:10px 8px}.tt-flight-score strong{display:block;color:#31b97d;font-size:26px}.tt-flight-score span{font-size:10px}.tt-flight-mainstats,.tt-flight-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0 9px}.tt-flight-mainstats>div,.tt-flight-summary>div{background:#edf3f0;border-radius:16px;padding:12px 7px;text-align:center}.tt-flight-mainstats strong,.tt-flight-summary strong{display:block;font-size:16px}.tt-flight-mainstats span,.tt-flight-summary small{display:block;font-size:9px;color:#687873;margin-top:3px}.tt-flight-summary span{display:block;font-size:18px}.tt-flight-meta{text-align:center;font-size:11px;color:#687873;margin:4px 0 12px}
+/* Discover */
+.tt-discover-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin:2px 2px 14px}
+.tt-icon-btn{width:42px;height:42px;border:0;border-radius:14px;background:light-dark(#edf3f0,#172b25);color:inherit;font-size:23px;font-weight:800;cursor:pointer}
+.tt-discover-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:10px}
+.tt-discover-tabs button{border:0;border-radius:14px;padding:11px 5px;background:light-dark(#edf3f0,#172b25);color:inherit;font-size:11px;font-weight:850;cursor:pointer}
+.tt-discover-tabs button.active{background:#31b97d;color:#07140f}
+.tt-discover-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:12px}
+.tt-discover-stats>div{background:light-dark(#f5f8f7,#12241f);border:1px solid light-dark(#e2e9e6,#27433a);border-radius:15px;padding:10px 5px;text-align:center}
+.tt-discover-stats strong{display:block;font-size:17px;font-weight:950}
+.tt-discover-stats span{display:block;margin-top:2px;font-size:9px;color:light-dark(#6d7b76,#9cafaa)}
+.tt-discover-list{display:flex;flex-direction:column;gap:9px}
+.tt-thermal-card{display:grid;grid-template-columns:48px 1fr auto;gap:10px;align-items:center;background:light-dark(#fff,#10201b);border:1px solid light-dark(#e0e7e4,#29443b);border-radius:19px;padding:12px;cursor:pointer;box-shadow:0 5px 16px rgba(0,0,0,.035)}
+.tt-thermal-ring{width:43px;height:43px;border-radius:50%;box-sizing:border-box;background:transparent;border:5px solid #111;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:950}
+.tt-thermal-ring.mine{border-color:#31b97d;color:#31b97d}.tt-thermal-ring.other{border-color:#9aa6a1;color:#7d8984}.tt-thermal-ring.explored{border-color:#111;color:#111}
+.tt-thermal-card h4{margin:0 0 3px;font-size:14px}.tt-thermal-card p{margin:0;color:light-dark(#687772,#9cafaa);font-size:10px;line-height:1.35}
+.tt-thermal-power{text-align:right}.tt-thermal-power strong{display:block;font-size:18px;font-weight:950}.tt-thermal-power span{display:block;font-size:9px;color:#31b97d;font-weight:800;margin-top:2px}
+.tt-discover-empty{text-align:center;padding:30px 10px;color:light-dark(#687772,#9cafaa);font-size:12px}
+
+</style>
   <div class="tt-shell">
     <div class="tt-top"><div class="tt-brand">THERMAL TYCOON</div><div style="float:right;font-size:13px;font-weight:800"><span id="liveUsername">Pilot</span> · <span id="liveCoins">0</span> 🪙</div><div class="tt-title" id="screenTitle">Thermik-Karte</div><div class="tt-sub" id="screenSub">Fliegen. Entdecken. Besitzen.</div><button id="logoutSubmit" type="button" style="margin-top:8px;border:0;background:transparent;color:#31b97d;font-weight:800;padding:0">Ausloggen</button></div>
 
@@ -103,11 +122,35 @@ function ttThermalIcon(state) {
 <div class="tt-card"><span class="tt-badge">🪂 FLUG ANALYSIEREN</span><h3 style="margin:10px 0 5px">IGC-Flug hochladen</h3><p class="muted">Dein Flug wird direkt im Browser analysiert und mit den gespeicherten Thermiken abgeglichen.</p><label class="tt-dropzone" for="igcFile"><span class="tt-drop-icon">＋</span><strong>IGC-Datei auswählen</strong><span>Tippen, um einen Flug zu öffnen</span></label><input id="igcFile" type="file" accept=".igc,text/plain" style="display:none"><div id="selectedIgcName" class="tt-selected-file">Noch keine Datei ausgewählt</div><button class="tt-btn" type="button" id="analyzeIgc">Flug analysieren</button><div class="toast" id="igcToast"></div></div>
 <div class="tt-card" id="igcResult" style="display:none"><div class="tt-flight-result-head"><div><span class="tt-badge">✓ FLUG ANALYSIERT</span><h3 id="igcName" style="margin:10px 0 2px;font-size:17px">–</h3><div class="muted" id="igcCoords"></div></div><div class="tt-flight-score"><strong id="flightThermalScore">0</strong><span>Thermiken</span></div></div><div class="tt-flight-mainstats"><div><strong id="igcDistance">–</strong><span>Distanz</span></div><div><strong id="igcDuration">–</strong><span>Flugzeit</span></div><div><strong id="igcMaxAlt">–</strong><span>Max. Höhe</span></div></div><div class="tt-flight-summary"><div><span>🔥</span><strong id="flightThermals">0</strong><small>erkannte Thermiken</small></div><div><span>⬆</span><strong id="igcGain">0 m</strong><small>Thermik-Höhengewinn</small></div><div><span>⚡</span><strong id="flightStrongest">+0.0</strong><small>stärkste Thermik m/s</small></div></div><div class="tt-flight-meta"><span id="igcPoints">0</span> Trackpunkte</div><button class="tt-btn secondary" type="button" id="showFlightOnMap">Flug auf Karte ansehen</button></div>
 <div class="tt-card" id="thermalResult" style="display:none"><span class="tt-badge">🔥 THERMIKEN DES FLUGES</span><h3 style="margin:10px 0 4px" id="thermalCount">0 Thermiken</h3><p class="muted">Erkannte Kreis-Steigphasen dieses Fluges.</p><div id="thermalList"></div></div></section>
-<section class="tt-screen" data-screen="discover"><div class="tt-card" style="text-align:center"><span class="tt-badge">🔥 NEU ENTDECKT</span><div class="thermal-ring">+3,8</div><h3 style="font-size:22px;margin:4px">Wildseeloder Ost</h3><div class="muted">Du bist der erste Pilot, der diese Thermik im Spiel entdeckt hat.</div><div class="tt-statrow"><div class="tt-stat"><b>+610 m</b><span>Höhengewinn</span></div><div class="tt-stat"><b>7:42</b><span>Minuten</span></div><div class="tt-stat"><b>420</b><span>Claim-Preis</span></div></div><button class="tt-btn" type="button" id="claimBtn">Für 420 Coins claimen</button><div class="toast" id="claimToast" aria-live="polite">✓ Wildseeloder Ost gehört jetzt dir!</div></div></section>
+<section class="tt-screen" data-screen="discover">
+  <div class="tt-discover-head">
+    <div>
+      <span class="tt-badge">🔥 ENTDECKEN</span>
+      <h3 style="margin:9px 0 3px">Thermiken entdecken</h3>
+      <p class="muted" style="margin:0">Echte Thermiken aus deiner Supabase-Datenbank.</p>
+    </div>
+    <button id="refreshDiscover" class="tt-icon-btn" type="button" aria-label="Aktualisieren">↻</button>
+  </div>
 
-    <section class="tt-screen" data-screen="thermal"><div class="tt-card"><span class="tt-badge">DEINE THERMIK</span><h3 style="font-size:22px;margin:9px 0 2px">Kitzbüheler Horn Süd</h3><div class="muted">Gekauft für 1.200 Coins</div><div class="coin" style="margin-top:16px">1.460 🪙</div><div class="muted">aktueller virtueller Marktwert · +21,7 %</div><div class="tt-statrow"><div class="tt-stat"><b>86</b><span>Piloten / Woche</span></div><div class="tt-stat"><b>+384</b><span>Coins / Woche</span></div><div class="tt-stat"><b>+3,1</b><span>m/s Ø</span></div></div></div><div class="tt-card"><b>Letzte Nutzung</b><div class="portfolio-item"><span>Heute · Pilot #418</span><span class="gain">+12</span></div><div class="portfolio-item"><span>Heute · Pilot #092</span><span class="gain">+8</span></div><div class="portfolio-item"><span>Gestern · Pilot #771</span><span class="gain">+17</span></div></div></section>
+  <div class="tt-discover-tabs" role="tablist">
+    <button class="active" type="button" data-discover-filter="strong">⚡ Stärkste</button>
+    <button type="button" data-discover-filter="buyable">🪙 Kaufbar</button>
+    <button type="button" data-discover-filter="popular">🔥 Häufig</button>
+  </div>
 
-    <section class="tt-screen" data-screen="portfolio"><div class="tt-card"><div class="muted">PORTFOLIOWERT</div><div class="coin">14.720 🪙</div><div class="gain">+8,4 % diese Woche</div><div class="tt-statrow"><div class="tt-stat"><b>12</b><span>Thermiken</span></div><div class="tt-stat"><b>+384</b><span>Wochen-Ertrag</span></div><div class="tt-stat"><b>#38</b><span>Österreich</span></div></div></div><div class="tt-card"><b>Deine stärksten Thermiken</b><div class="portfolio-item"><span>🔥 Horn Süd<br><small class="muted">+3,2 m/s Ø</small></span><span><b>1.460</b><br><small class="gain">+128</small></span></div><div class="portfolio-item"><span>🔥 Wildseeloder Ost<br><small class="muted">+3,8 m/s Ø</small></span><span><b>1.210</b><br><small class="gain">+96</small></span></div><div class="portfolio-item"><span>🔥 Loferer Süd<br><small class="muted">+2,6 m/s Ø</small></span><span><b>980</b><br><small class="gain">+52</small></span></div></div></section>
+  <div id="discoverStats" class="tt-discover-stats">
+    <div><strong id="discoverTotal">–</strong><span>Thermiken</span></div>
+    <div><strong id="discoverBuyable">–</strong><span>kaufbar</span></div>
+    <div><strong id="discoverBest">–</strong><span>bestes max.</span></div>
+  </div>
+
+  <div id="discoverToast" class="toast" aria-live="polite"></div>
+  <div id="discoverList" class="tt-discover-list">
+    <div class="tt-discover-empty">Thermiken werden geladen …</div>
+  </div>
+</section>
+
+<section class="tt-screen" data-screen="portfolio"><div class="tt-card"><div class="muted">PORTFOLIOWERT</div><div class="coin">14.720 🪙</div><div class="gain">+8,4 % diese Woche</div><div class="tt-statrow"><div class="tt-stat"><b>12</b><span>Thermiken</span></div><div class="tt-stat"><b>+384</b><span>Wochen-Ertrag</span></div><div class="tt-stat"><b>#38</b><span>Österreich</span></div></div></div><div class="tt-card"><b>Deine stärksten Thermiken</b><div class="portfolio-item"><span>🔥 Horn Süd<br><small class="muted">+3,2 m/s Ø</small></span><span><b>1.460</b><br><small class="gain">+128</small></span></div><div class="portfolio-item"><span>🔥 Wildseeloder Ost<br><small class="muted">+3,8 m/s Ø</small></span><span><b>1.210</b><br><small class="gain">+96</small></span></div><div class="portfolio-item"><span>🔥 Loferer Süd<br><small class="muted">+2,6 m/s Ø</small></span><span><b>980</b><br><small class="gain">+52</small></span></div></div></section>
 
     <section class="tt-screen" data-screen="ranking"><div class="tt-card"><div style="display:flex;justify-content:space-between;align-items:center"><b>🇦🇹 Österreich</b><span class="tt-badge">Diese Woche</span></div><div class="rank"><b>1</b><span>Max K.</span><b>28.940</b></div><div class="rank"><b>2</b><span>Sarah F.</span><b>24.180</b></div><div class="rank"><b>3</b><span>Thomas R.</span><b>21.760</b></div><div class="rank me"><b>38</b><span><b>Alex</b><br><small class="muted">12 Thermiken</small></span><b>14.720</b></div></div><div class="tt-card"><b>🏆 Wochen-Challenge</b><p class="muted">Erfliege 5 verschiedene Thermiken über +3,0 m/s.</p><div style="height:10px;border-radius:99px;background:light-dark(#e4ebe8,#243a34);overflow:hidden"><div style="height:100%;width:60%;background:#31b97d"></div></div><div class="muted" style="margin-top:7px">3 / 5 · Belohnung: 250 Coins</div></div></section>
 
@@ -204,7 +247,7 @@ window.buyThermalSpot=async function(thermalId){
   const result=Array.isArray(data)?data[0]:data;
   if(!result||result.ok!==true){
     alert((result&&result.message)||'Kauf nicht möglich.');
-    await loadSavedThermalSpots();
+    await loadSavedThermalSpots();await loadDiscover();
     return;
   }
 
@@ -267,6 +310,64 @@ async function saveThermalSpots(thermals){
   return {saved,skipped:thermals.length-candidates.length};
 }
 
-document.getElementById('igcFile').addEventListener('change',e=>{const f=e.target.files&&e.target.files[0];document.getElementById('selectedIgcName').textContent=f?f.name:'Noch keine Datei ausgewählt'});document.getElementById('showFlightOnMap').addEventListener('click',()=>go('map'));root.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.go)));document.getElementById('openThermal').addEventListener('click',()=>go('thermal'));ensureMap();document.getElementById('claimBtn').addEventListener('click',e=>{e.currentTarget.textContent='Geclaimt ✓';e.currentTarget.disabled=true;document.getElementById('claimToast').classList.add('show')});document.getElementById('analyzeIgc').addEventListener('click',async()=>{const input=document.getElementById('igcFile'),toast=document.getElementById('igcToast'),file=input.files&&input.files[0];toast.classList.add('show');if(!file){toast.textContent='Bitte zuerst eine .igc-Datei auswählen.';return}try{const text=await file.text(),pts=text.split(/\r?\n/).map(parseB).filter(Boolean);if(pts.length<2){toast.textContent='Keine gültigen IGC-Trackpunkte gefunden.';document.getElementById('igcResult').style.display='none';document.getElementById('thermalResult').style.display='none';return}const duration=dt(pts[0],pts.at(-1)),maxAlt=Math.max(...pts.map(p=>p.alt)),thermals=detectThermals(pts),gain=thermals.reduce((n,t)=>n+t.gain,0),flightKm=flightDistanceKm(pts),strongest=thermals.length?Math.max(...thermals.map(t=>Number(t.maxClimb)||0)):0;document.getElementById('igcName').textContent=file.name;document.getElementById('igcPoints').textContent=pts.length.toLocaleString('de-DE');document.getElementById('igcDuration').textContent=fmtTime(duration);document.getElementById('igcDistance').textContent=flightKm.toFixed(1)+' km';document.getElementById('flightThermalScore').textContent=thermals.length;document.getElementById('flightThermals').textContent=thermals.length;document.getElementById('flightStrongest').textContent='+'+strongest.toFixed(1);document.getElementById('igcGain').textContent='+'+Math.round(gain)+' m';document.getElementById('igcMaxAlt').textContent=Math.round(maxAlt)+' m';document.getElementById('igcCoords').textContent='Start: '+pts[0].lat.toFixed(4)+', '+pts[0].lon.toFixed(4)+' · Ende: '+pts.at(-1).lat.toFixed(4)+', '+pts.at(-1).lon.toFixed(4);document.getElementById('igcResult').style.display='block';document.getElementById('thermalResult').style.display='block';document.getElementById('thermalCount').textContent=thermals.length+' '+(thermals.length===1?'Thermik':'Thermiken');document.querySelector('#thermalResult p.muted').textContent='Mindestens 2 Kreise, ca. 55 Sekunden, +35 m Höhengewinn und Ø +0,45 m/s. GPS-Kreisradius wird geprüft; kurze Unterbrechungen derselben Thermik werden zusammengeführt.';document.getElementById('thermalList').innerHTML=thermals.length?thermals.map((t,i)=>'<div class="portfolio-item"><span><b>🔥 Thermik '+(i+1)+'</b><br><small class="muted">'+t.lat.toFixed(4)+', '+t.lon.toFixed(4)+' · '+fmtTime(t.dur)+' · '+t.rotations.toFixed(1)+' Kreise · Radius Ø '+Math.round(t.radius)+' m</small></span><span style="text-align:right"><b>+'+Math.round(t.gain)+' m</b><br><small class="gain">Ø +'+t.avg.toFixed(1)+' m/s · max +'+t.maxClimb.toFixed(1)+'</small></span></div>').join(''):'<p class="muted">Keine ausreichend lange und räumlich plausible Kreis-Steigphase erkannt.</p>';renderFlightMap(pts,thermals);try{await saveThermalSpots(thermals);toast.textContent='✓ IGC analysiert: '+thermals.length+' Thermiken erkannt und gespeichert.'}catch(dbErr){console.error(dbErr);toast.textContent='✓ IGC analysiert, aber Speichern fehlgeschlagen: '+dbErr.message;}}catch(err){toast.textContent='Datei konnte nicht gelesen werden.'}})})();
+document.getElementById('igcFile').addEventListener('change',e=>{const f=e.target.files&&e.target.files[0];document.getElementById('selectedIgcName').textContent=f?f.name:'Noch keine Datei ausgewählt'});document.getElementById('showFlightOnMap').addEventListener('click',()=>go('map'));
+let discoverRows=[],discoverFilter='strong';
+
+function discoverState(s){
+  const uid=currentUser&&currentUser.id;
+  if(uid&&s.owner_id===uid)return 'mine';
+  if(s.owner_id)return 'other';
+  return 'explored';
+}
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function renderDiscover(){
+  const list=document.getElementById('discoverList');
+  let rows=[...discoverRows];
+  if(discoverFilter==='buyable') rows=rows.filter(s=>!s.owner_id).sort((a,b)=>(Number(b.max_climb)||0)-(Number(a.max_climb)||0));
+  else if(discoverFilter==='popular') rows.sort((a,b)=>(Number(b.flight_count)||0)-(Number(a.flight_count)||0)||(Number(b.max_climb)||0)-(Number(a.max_climb)||0));
+  else rows.sort((a,b)=>(Number(b.max_climb)||0)-(Number(a.max_climb)||0));
+  rows=rows.slice(0,12);
+  if(!rows.length){list.innerHTML='<div class="tt-discover-empty">Für diesen Filter wurden keine Thermiken gefunden.</div>';return}
+  list.innerHTML=rows.map(s=>{
+    const state=discoverState(s),max=Number(s.max_climb)||0,avg=Number(s.avg_climb)||0,uses=Number(s.flight_count)||1,price=thermalPriceFromMax(max);
+    const label=state==='mine'?'Meine':state==='other'?'Vergeben':price+' 🪙';
+    return `<article class="tt-thermal-card" data-thermal-id="${Number(s.id)}">
+      <div class="tt-thermal-ring ${state}">${uses}×</div>
+      <div><h4>${esc(s.name||('Thermik #'+s.id))}</h4><p>Ø +${avg.toFixed(1)} m/s · Radius ${Math.round(Number(s.radius_m)||60)} m · ${uses} Nutzung${uses===1?'':'en'}</p></div>
+      <div class="tt-thermal-power"><strong>+${max.toFixed(1)}</strong><span>${label}</span></div>
+    </article>`;
+  }).join('');
+  list.querySelectorAll('[data-thermal-id]').forEach(el=>el.addEventListener('click',()=>{
+    const s=discoverRows.find(x=>Number(x.id)===Number(el.dataset.thermalId));
+    if(s)window.openThermalSheet(s,discoverState(s));
+  }));
+}
+async function loadDiscover(){
+  const toast=document.getElementById('discoverToast');
+  toast.textContent='Thermiken werden geladen …';
+  try{
+    const {data,error}=await supabase.from('thermal_spots')
+      .select('id,name,owner_id,discovered_by,avg_climb,max_climb,radius_m,flight_count,value,lat,lon,last_seen_at')
+      .order('max_climb',{ascending:false}).limit(100);
+    if(error)throw error;
+    discoverRows=(data||[]).filter(s=>Number.isFinite(Number(s.lat))&&Number.isFinite(Number(s.lon)));
+    const buyable=discoverRows.filter(s=>!s.owner_id).length;
+    const best=discoverRows.length?Math.max(...discoverRows.map(s=>Number(s.max_climb)||0)):0;
+    document.getElementById('discoverTotal').textContent=discoverRows.length;
+    document.getElementById('discoverBuyable').textContent=buyable;
+    document.getElementById('discoverBest').textContent='+'+best.toFixed(1);
+    toast.textContent='';
+    renderDiscover();
+  }catch(e){
+    console.error(e);
+    toast.textContent='Entdecken konnte nicht geladen werden: '+(e.message||e);
+  }
+}
+document.querySelectorAll('[data-discover-filter]').forEach(btn=>btn.addEventListener('click',()=>{
+  document.querySelectorAll('[data-discover-filter]').forEach(x=>x.classList.remove('active'));
+  btn.classList.add('active');discoverFilter=btn.dataset.discoverFilter;renderDiscover();
+}));
+document.getElementById('refreshDiscover').addEventListener('click',loadDiscover);
+root.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.go)));document.getElementById('openThermal').addEventListener('click',()=>go('thermal'));ensureMap();document.getElementById('claimBtn').addEventListener('click',e=>{e.currentTarget.textContent='Geclaimt ✓';e.currentTarget.disabled=true;document.getElementById('claimToast').classList.add('show')});document.getElementById('analyzeIgc').addEventListener('click',async()=>{const input=document.getElementById('igcFile'),toast=document.getElementById('igcToast'),file=input.files&&input.files[0];toast.classList.add('show');if(!file){toast.textContent='Bitte zuerst eine .igc-Datei auswählen.';return}try{const text=await file.text(),pts=text.split(/\r?\n/).map(parseB).filter(Boolean);if(pts.length<2){toast.textContent='Keine gültigen IGC-Trackpunkte gefunden.';document.getElementById('igcResult').style.display='none';document.getElementById('thermalResult').style.display='none';return}const duration=dt(pts[0],pts.at(-1)),maxAlt=Math.max(...pts.map(p=>p.alt)),thermals=detectThermals(pts),gain=thermals.reduce((n,t)=>n+t.gain,0),flightKm=flightDistanceKm(pts),strongest=thermals.length?Math.max(...thermals.map(t=>Number(t.maxClimb)||0)):0;document.getElementById('igcName').textContent=file.name;document.getElementById('igcPoints').textContent=pts.length.toLocaleString('de-DE');document.getElementById('igcDuration').textContent=fmtTime(duration);document.getElementById('igcDistance').textContent=flightKm.toFixed(1)+' km';document.getElementById('flightThermalScore').textContent=thermals.length;document.getElementById('flightThermals').textContent=thermals.length;document.getElementById('flightStrongest').textContent='+'+strongest.toFixed(1);document.getElementById('igcGain').textContent='+'+Math.round(gain)+' m';document.getElementById('igcMaxAlt').textContent=Math.round(maxAlt)+' m';document.getElementById('igcCoords').textContent='Start: '+pts[0].lat.toFixed(4)+', '+pts[0].lon.toFixed(4)+' · Ende: '+pts.at(-1).lat.toFixed(4)+', '+pts.at(-1).lon.toFixed(4);document.getElementById('igcResult').style.display='block';document.getElementById('thermalResult').style.display='block';document.getElementById('thermalCount').textContent=thermals.length+' '+(thermals.length===1?'Thermik':'Thermiken');document.querySelector('#thermalResult p.muted').textContent='Mindestens 2 Kreise, ca. 55 Sekunden, +35 m Höhengewinn und Ø +0,45 m/s. GPS-Kreisradius wird geprüft; kurze Unterbrechungen derselben Thermik werden zusammengeführt.';document.getElementById('thermalList').innerHTML=thermals.length?thermals.map((t,i)=>'<div class="portfolio-item"><span><b>🔥 Thermik '+(i+1)+'</b><br><small class="muted">'+t.lat.toFixed(4)+', '+t.lon.toFixed(4)+' · '+fmtTime(t.dur)+' · '+t.rotations.toFixed(1)+' Kreise · Radius Ø '+Math.round(t.radius)+' m</small></span><span style="text-align:right"><b>+'+Math.round(t.gain)+' m</b><br><small class="gain">Ø +'+t.avg.toFixed(1)+' m/s · max +'+t.maxClimb.toFixed(1)+'</small></span></div>').join(''):'<p class="muted">Keine ausreichend lange und räumlich plausible Kreis-Steigphase erkannt.</p>';renderFlightMap(pts,thermals);try{await saveThermalSpots(thermals);toast.textContent='✓ IGC analysiert: '+thermals.length+' Thermiken erkannt und gespeichert.'}catch(dbErr){console.error(dbErr);toast.textContent='✓ IGC analysiert, aber Speichern fehlgeschlagen: '+dbErr.message;}}catch(err){toast.textContent='Datei konnte nicht gelesen werden.'}})})();
   </script>
 </div>
