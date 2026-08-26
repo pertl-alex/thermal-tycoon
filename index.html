@@ -161,6 +161,11 @@ function ttThermalIcon(state) {
     <div class="muted">PORTFOLIOWERT</div><div id="portfolioValue" class="coin">– 🪙</div>
     <div class="tt-statrow"><div class="tt-stat"><b id="portfolioCount">–</b><span>Thermiken</span></div><div class="tt-stat"><b id="portfolioBest">–</b><span>stärkste</span></div><div class="tt-stat"><b id="portfolioUses">–</b><span>Nutzungen</span></div></div>
   </div>
+  <div class="tt-card">
+    <div class="muted">PASSIVE EINNAHMEN</div><div id="portfolioIncomeTotal" class="coin" style="font-size:29px">+0 🪙</div>
+    <div class="tt-statrow"><div class="tt-stat"><b id="portfolioIncomeToday">+0</b><span>Coins heute</span></div><div class="tt-stat"><b id="portfolioPaidUses">0</b><span>vergütete Nutzungen</span></div><div class="tt-stat"><b>4 %</b><span>pro Nutzung</span></div></div>
+    <div class="muted">Nur fremde Piloten · pro Pilot und Thermik höchstens 1× pro Kalendertag.</div>
+  </div>
   <div id="portfolioToast" class="toast"></div>
   <div class="tt-card"><b>Deine Thermiken</b><div id="portfolioList" class="tt-discover-list" style="margin-top:10px"><div class="tt-discover-empty">Portfolio wird geladen …</div></div></div>
 </section>
@@ -367,6 +372,30 @@ async function loadPortfolio(){
     .eq('owner_id',currentUser.id);
    if(error)throw error;
    portfolioRows=data||[];
+
+   const ids=portfolioRows.map(s=>Number(s.id)).filter(Number.isFinite);
+   let paidUses=[];
+   if(ids.length){
+     const r=await client.from('thermal_uses')
+       .select('thermal_id,pilot_id,owner_reward,used_at')
+       .in('thermal_id',ids)
+       .gt('owner_reward',0)
+       .order('used_at',{ascending:false});
+     if(r.error)throw r.error;
+     paidUses=r.data||[];
+   }
+
+   const incomeByThermal=new Map();
+   paidUses.forEach(u=>incomeByThermal.set(Number(u.thermal_id),(incomeByThermal.get(Number(u.thermal_id))||0)+(Number(u.owner_reward)||0)));
+   const incomeTotal=paidUses.reduce((sum,u)=>sum+(Number(u.owner_reward)||0),0);
+
+   // Supabase timestamps are compared using the user's local calendar date.
+   const now=new Date(), y=now.getFullYear(),m=now.getMonth(),d=now.getDate();
+   const incomeToday=paidUses.reduce((sum,u)=>{
+     const x=new Date(u.used_at);
+     return x.getFullYear()===y&&x.getMonth()===m&&x.getDate()===d ? sum+(Number(u.owner_reward)||0) : sum;
+   },0);
+
    const value=portfolioRows.reduce((sum,s)=>sum+(Number(s.value)||thermalPriceFromMax(Number(s.max_climb)||0)),0);
    const best=portfolioRows.length?Math.max(...portfolioRows.map(s=>Number(s.max_climb)||0)):0;
    const uses=portfolioRows.reduce((sum,s)=>sum+(Number(s.flight_count)||0),0);
@@ -374,17 +403,25 @@ async function loadPortfolio(){
    document.getElementById('portfolioCount').textContent=portfolioRows.length;
    document.getElementById('portfolioBest').textContent='+'+best.toFixed(1);
    document.getElementById('portfolioUses').textContent=uses;
+   document.getElementById('portfolioIncomeTotal').textContent='+'+incomeTotal.toLocaleString('de-DE')+' 🪙';
+   document.getElementById('portfolioIncomeToday').textContent='+'+incomeToday.toLocaleString('de-DE');
+   document.getElementById('portfolioPaidUses').textContent=paidUses.length;
+
    const list=document.getElementById('portfolioList');
    const rows=[...portfolioRows].sort((a,b)=>(Number(b.max_climb)||0)-(Number(a.max_climb)||0));
-   list.innerHTML=rows.length?rows.map(s=>`<article class="tt-thermal-card" data-portfolio-id="${Number(s.id)}">
-     <div class="tt-thermal-ring mine">${Number(s.flight_count)||1}×</div>
-     <div><h4>${esc(s.name||('Thermik #'+s.id))}</h4><p>Ø +${(Number(s.avg_climb)||0).toFixed(1)} m/s · Radius ${Math.round(Number(s.radius_m)||60)} m · ${Number(s.flight_count)||1} Nutzung${(Number(s.flight_count)||1)===1?'':'en'}</p></div>
-     <div class="tt-thermal-power"><strong>+${(Number(s.max_climb)||0).toFixed(1)}</strong><span>${(Number(s.value)||thermalPriceFromMax(Number(s.max_climb)||0)).toLocaleString('de-DE')} 🪙</span></div>
-   </article>`).join(''):'<div class="tt-discover-empty">Du besitzt noch keine Thermiken.</div>';
+   list.innerHTML=rows.length?rows.map(s=>{
+     const earned=incomeByThermal.get(Number(s.id))||0;
+     return `<article class="tt-thermal-card" data-portfolio-id="${Number(s.id)}">
+       <div class="tt-thermal-ring mine">${Number(s.flight_count)||1}×</div>
+       <div><h4>${esc(s.name||('Thermik #'+s.id))}</h4><p>Ø +${(Number(s.avg_climb)||0).toFixed(1)} m/s · Radius ${Math.round(Number(s.radius_m)||60)} m · ${Number(s.flight_count)||1} Nutzung${(Number(s.flight_count)||1)===1?'':'en'}${earned>0?' · +'+earned.toLocaleString('de-DE')+' 🪙 verdient':''}</p></div>
+       <div class="tt-thermal-power"><strong>+${(Number(s.max_climb)||0).toFixed(1)}</strong><span>${(Number(s.value)||thermalPriceFromMax(Number(s.max_climb)||0)).toLocaleString('de-DE')} 🪙</span></div>
+     </article>`;
+   }).join(''):'<div class="tt-discover-empty">Du besitzt noch keine Thermiken.</div>';
    list.querySelectorAll('[data-portfolio-id]').forEach(el=>el.addEventListener('click',()=>{const s=portfolioRows.find(x=>Number(x.id)===Number(el.dataset.portfolioId));if(s)window.openThermalSheet(s,'mine')}));
    toast.textContent='';
  }catch(e){console.error('Portfolio:',e);toast.textContent='Portfolio konnte nicht geladen werden: '+(e.message||e)}
 }
+
 let discoverRows=[],discoverFilter='strong';
 
 function discoverState(s){
