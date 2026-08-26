@@ -1,4 +1,13 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<div id="ttSheetBackdrop" class="tt-sheet-backdrop" onclick="window.closeThermalSheet()"></div>
+<div id="ttThermalSheet" class="tt-sheet">
+ <div class="tt-sheet-handle"></div>
+ <div class="tt-sheet-top"><div><div id="ttSheetStatus" class="tt-sheet-status">Thermik</div><div id="ttSheetTitle" class="tt-sheet-title">Thermik</div><div id="ttSheetSub" class="tt-sheet-sub"></div></div><button class="tt-sheet-close" onclick="window.closeThermalSheet()">×</button></div>
+ <div class="tt-sheet-hero"><strong id="ttSheetMax">+0.0</strong><span>m/s maximales Steigen</span></div>
+ <div class="tt-sheet-grid"><div class="tt-sheet-stat"><strong id="ttSheetAvg">+0.0</strong><span>m/s Ø</span></div><div class="tt-sheet-stat"><strong id="ttSheetRadius">0 m</strong><span>Radius</span></div><div class="tt-sheet-stat"><strong id="ttSheetUses">0</strong><span>Nutzungen</span></div></div>
+ <div id="ttSheetOwner" class="tt-sheet-owner"></div><button id="ttSheetBuy" class="tt-sheet-buy" style="display:none"></button>
+</div>
 <script>
 function ttThermalState(spot) {
   const uid =
@@ -60,6 +69,27 @@ function ttThermalIcon(state) {
 
 .tt-buy-btn{display:block;width:100%;margin-top:12px;padding:11px 14px;border:0;border-radius:14px;background:#31b97d;color:#07140f;font-weight:850;font-size:14px;cursor:pointer}
 
+
+.tt-sheet-backdrop{position:fixed;inset:0;background:rgba(7,20,15,.28);opacity:0;pointer-events:none;transition:.2s;z-index:9998}
+.tt-sheet-backdrop.open{opacity:1;pointer-events:auto}
+.tt-sheet{position:fixed;left:50%;bottom:0;width:min(620px,100%);transform:translate(-50%,105%);transition:.24s;z-index:9999;background:#fff;border-radius:26px 26px 0 0;box-shadow:0 -12px 40px rgba(0,0,0,.18);padding:10px 20px calc(20px + env(safe-area-inset-bottom));box-sizing:border-box}
+.tt-sheet.open{transform:translate(-50%,0)}
+.tt-sheet-handle{width:44px;height:5px;border-radius:999px;background:#d7dfdb;margin:2px auto 15px}
+.tt-sheet-top{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
+.tt-sheet-status{display:inline-flex;padding:7px 11px;border-radius:999px;background:#e7f7f0;color:#20a970;font-size:12px;font-weight:850;text-transform:uppercase}
+.tt-sheet-title{font-size:23px;line-height:1.1;font-weight:900;margin:10px 0 4px;color:#0d1713}
+.tt-sheet-sub{font-size:13px;color:#6f7c76}
+.tt-sheet-close{border:0;background:#eef3f1;width:38px;height:38px;border-radius:50%;font-size:22px}
+.tt-sheet-hero{margin:18px 0 12px;background:#eef4f1;border-radius:20px;padding:16px;text-align:center}
+.tt-sheet-hero strong{display:block;font-size:36px;line-height:1;font-weight:900}
+.tt-sheet-hero span{display:block;margin-top:5px;color:#65736d;font-size:13px}
+.tt-sheet-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:10px 0 14px}
+.tt-sheet-stat{background:#f1f5f3;border-radius:17px;padding:12px 8px;text-align:center}
+.tt-sheet-stat strong{display:block;font-size:18px;font-weight:900}
+.tt-sheet-stat span{display:block;margin-top:3px;font-size:11px;color:#748079}
+.tt-sheet-owner{padding:11px 2px 4px;color:#5e6b65;font-size:13px}
+.tt-sheet-buy{width:100%;margin-top:12px;padding:14px;border:0;border-radius:16px;background:#31b97d;color:#07140f;font-size:16px;font-weight:900}
+@media(min-width:700px){.tt-sheet{bottom:20px;border-radius:26px}}
 </style>
   <div class="tt-shell">
     <div class="tt-top"><div class="tt-brand">THERMAL TYCOON</div><div style="float:right;font-size:13px;font-weight:800"><span id="liveUsername">Pilot</span> · <span id="liveCoins">0</span> 🪙</div><div class="tt-title" id="screenTitle">Thermik-Karte</div><div class="tt-sub" id="screenSub">Fliegen. Entdecken. Besitzen.</div><button id="logoutSubmit" type="button" style="margin-top:8px;border:0;background:transparent;color:#31b97d;font-weight:800;padding:0">Ausloggen</button></div>
@@ -87,6 +117,25 @@ function ttThermalIcon(state) {
  if(m<1)return 50;if(m<2)return 100;if(m<3)return 150;
  if(m<4)return 200;if(m<5)return 300;if(m<6)return 400;return 500;
 }
+window.closeThermalSheet=function(){
+ document.getElementById('ttThermalSheet')?.classList.remove('open');
+ document.getElementById('ttSheetBackdrop')?.classList.remove('open');
+};
+window.openThermalSheet=function(s,state){
+ const avg=Number(s.avg_climb)||0,max=Number(s.max_climb)||0,radius=Number(s.radius_m)||60,count=Number(s.flight_count)||1,price=thermalPriceFromMax(max);
+ document.getElementById('ttSheetStatus').textContent=state==='mine'?'🟢 Meine Thermik':state==='other'?'⚪ Andere Thermik':'⚫ Kaufbare Thermik';
+ document.getElementById('ttSheetTitle').textContent=s.name||('Thermik #'+s.id);
+ document.getElementById('ttSheetSub').textContent=state==='mine'?'Diese Thermik gehört dir.':state==='other'?'Diese Thermik gehört einem anderen Piloten.':'Erforscht · noch nicht gekauft';
+ document.getElementById('ttSheetMax').textContent='+'+max.toFixed(1);
+ document.getElementById('ttSheetAvg').textContent='+'+avg.toFixed(1);
+ document.getElementById('ttSheetRadius').textContent=Math.round(radius)+' m';
+ document.getElementById('ttSheetUses').textContent=count;
+ document.getElementById('ttSheetOwner').textContent=(state==='mine'?'Besitzer: Du · Wert: ':state==='other'?'Bereits im Besitz · Wert: ':'Aktueller Kaufpreis: ')+price+' 🪙';
+ const b=document.getElementById('ttSheetBuy');
+ if(state==='explored'){b.style.display='block';b.textContent='Für '+price+' 🪙 kaufen';b.onclick=async()=>{await window.buyThermalSpot(Number(s.id));window.closeThermalSheet()}}
+ else{b.style.display='none';b.onclick=null}
+ document.getElementById('ttSheetBackdrop').classList.add('open');document.getElementById('ttThermalSheet').classList.add('open');
+};
 async function loadSavedThermalSpots(){
 ensureMap();
 const {data,error}=await client.from('thermal_spots').select('id,lat,lon,radius_m,avg_climb,max_climb,flight_count,name,last_seen_at,owner_id,discovered_by');
@@ -135,7 +184,7 @@ valid.forEach((s,i)=>{
     zIndexOffset: state==='mine' ? 300 : state==='explored' ? 200 : 100
   }).addTo(flightMap);
 
-  marker.bindPopup(popup);
+  marker.on('click',()=>window.openThermalSheet(s,state));
   thermalLayers.push(marker);
 });
 if(valid.length){flightMap.fitBounds(L.latLngBounds(valid.map(s=>[s._lat,s._lon])),{padding:[28,28],maxZoom:13});document.getElementById('mapHint').textContent=valid.length+' gespeicherte Thermik'+(valid.length===1?'':'en')+' aus Supabase geladen.'}else document.getElementById('mapHint').textContent='Noch keine gespeicherten Thermiken mit gültigen Koordinaten vorhanden.';
