@@ -346,11 +346,17 @@ async function loadDiscover(){
   const toast=document.getElementById('discoverToast');
   toast.textContent='Thermiken werden geladen …';
   try{
-    const {data,error}=await supabase.from('thermal_spots')
-      .select('id,name,owner_id,discovered_by,avg_climb,max_climb,radius_m,flight_count,value,lat,lon,last_seen_at')
-      .order('max_climb',{ascending:false}).limit(100);
+    const {data,error}=await supabase.from('thermal_spots').select('*').limit(100);
     if(error)throw error;
-    discoverRows=(data||[]).filter(s=>Number.isFinite(Number(s.lat))&&Number.isFinite(Number(s.lon)));
+    discoverRows=(data||[]).map(s=>({
+      ...s,
+      lat:s.lat ?? s.latitude,
+      lon:s.lon ?? s.longitude,
+      radius_m:s.radius_m ?? s.avg_radius ?? 60,
+      flight_count:s.flight_count ?? s.discovery_count ?? 1,
+      max_climb:s.max_climb ?? 0,
+      avg_climb:s.avg_climb ?? 0
+    })).filter(s=>Number.isFinite(Number(s.lat))&&Number.isFinite(Number(s.lon)));
     const buyable=discoverRows.filter(s=>!s.owner_id).length;
     const best=discoverRows.length?Math.max(...discoverRows.map(s=>Number(s.max_climb)||0)):0;
     document.getElementById('discoverTotal').textContent=discoverRows.length;
