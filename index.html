@@ -347,7 +347,7 @@ async function loadDiscover(){
   const toast=document.getElementById('discoverToast');
   toast.textContent='Thermiken werden geladen …';
   try{
-    const {data,error}=await supabase.from('thermal_spots').select('*').limit(100);
+    const {data,error}=await client.from('thermal_spots').select('id,name,owner_id,discovered_by,avg_climb,max_climb,radius_m,flight_count,discovery_count,value,lat,lon,last_seen_at').limit(100);
     if(error)throw error;
     discoverRows=(data||[]).map(s=>({
       ...s,
@@ -366,8 +366,12 @@ async function loadDiscover(){
     toast.textContent='';
     renderDiscover();
   }catch(e){
-    console.error(e);
-    toast.textContent='Entdecken konnte nicht geladen werden: '+(e.message||e);
+    console.error('Discover load error:',e);
+    discoverRows=[];
+    document.getElementById('discoverTotal').textContent='–';
+    document.getElementById('discoverBuyable').textContent='–';
+    document.getElementById('discoverBest').textContent='–';
+    toast.textContent='Ladefehler: '+(e.message||String(e));
   }
 }
 document.querySelectorAll('[data-discover-filter]').forEach(btn=>btn.addEventListener('click',()=>{
