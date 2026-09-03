@@ -36,6 +36,11 @@ function ttThermalIcon(state) {
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <div id="thermal-login" style="max-width:430px;margin:20px auto;padding:20px;font-family:Inter,ui-sans-serif,system-ui,sans-serif;background:#0d1916;color:#eef7f4;border-radius:24px"><div style="font-size:12px;font-weight:800;letter-spacing:.16em;color:#31b97d">THERMAL TYCOON</div><h2>Login</h2><input id="loginEmail" type="email" placeholder="E-Mail" style="width:100%;box-sizing:border-box;padding:13px;margin:6px 0;border-radius:12px;border:1px solid #355249;background:#07110f;color:white"><input id="loginPassword" type="password" placeholder="Passwort" style="width:100%;box-sizing:border-box;padding:13px;margin:6px 0;border-radius:12px;border:1px solid #355249;background:#07110f;color:white"><button id="loginSubmit" type="button" style="width:100%;padding:13px;margin-top:8px;border:0;border-radius:12px;background:#31b97d;font-weight:800">Einloggen</button><div id="loginStatus" style="margin-top:10px;font-size:12px;color:#ff9c73"></div><div id="recoveryBox" style="display:none;margin-top:18px;padding-top:18px;border-top:1px solid #355249"><b>Neues Passwort festlegen</b><input id="newPassword" type="password" placeholder="Neues Passwort" style="width:100%;box-sizing:border-box;padding:13px;margin:10px 0 6px;border-radius:12px;border:1px solid #355249;background:#07110f;color:white"><input id="newPassword2" type="password" placeholder="Passwort wiederholen" style="width:100%;box-sizing:border-box;padding:13px;margin:6px 0;border-radius:12px;border:1px solid #355249;background:#07110f;color:white"><button id="saveNewPassword" type="button" style="width:100%;padding:13px;margin-top:8px;border:0;border-radius:12px;background:#31b97d;font-weight:800">Neues Passwort speichern</button><div id="recoveryStatus" style="margin-top:10px;font-size:12px;color:#ff9c73"></div></div></div><div id="thermal-tycoon" class="tt-root" style="display:none">
+<div id="incomeLoginToast" class="tt-income-toast" aria-live="polite">
+  <div class="tt-income-toast-title">🪙 <span id="incomeLoginTotal">+0 Coins verdient!</span></div>
+  <div id="incomeLoginLines" class="tt-income-toast-lines"></div>
+</div>
+
   <style>
     .tt-root{background:light-dark(#eef2f3,#07110f);color:light-dark(#13201d,#eef7f4);border-radius:0;padding:20px;font-family:Inter,ui-sans-serif,system-ui,sans-serif;min-height:720px}.tt-shell{max-width:430px;margin:0 auto;background:light-dark(#f8faf9,#0d1916);border:1px solid light-dark(#d7dfdc,#243b35);border-radius:32px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.18)}.tt-top{padding:22px 20px 12px}.tt-brand{font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#31b97d}.tt-title{font-size:26px;font-weight:850;letter-spacing:-.04em;margin-top:4px}.tt-sub{font-size:13px;color:light-dark(#64736f,#9db1ab);margin-top:3px}.tt-screen{display:none;padding:8px 16px 22px;min-height:530px}.tt-screen.active{display:block}.tt-card{background:light-dark(#fff,#13231f);border:1px solid light-dark(#dde5e2,#274039);border-radius:20px;padding:16px;margin:10px 0}.tt-map{position:relative;height:315px;border-radius:22px;overflow:hidden;background:linear-gradient(145deg,#c9d8c7,#7fa58a);border:1px solid rgba(0,0,0,.08)}.tt-map:before{content:none!important}.ridge{position:absolute;width:250px;height:120px;border-radius:50%;background:rgba(50,92,62,.22);transform:rotate(-18deg)}.r1{left:-45px;top:42px}.r2{right:-70px;bottom:35px}.thermal{position:absolute;width:58px;height:58px;border-radius:50%;border:3px solid rgba(255,255,255,.9);background:#ef7f45;color:white;font-weight:900;display:flex;align-items:center;justify-content:center;box-shadow:0 5px 18px rgba(0,0,0,.2);cursor:pointer}.thermal small{font-size:10px}.t1{left:45%;top:26%}.t2{left:17%;top:58%;background:#d5a43b}.t3{right:13%;bottom:17%;background:#4e9c82}.map-label{position:absolute;font-size:11px;font-weight:800;color:#203a2a;background:rgba(255,255,255,.78);padding:4px 7px;border-radius:8px}.ml1{top:12px;left:13px}.ml2{bottom:12px;right:12px}.tt-statrow{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}.tt-stat{padding:12px 8px;border-radius:15px;background:light-dark(#eaf1ee,#172b25);text-align:center}.tt-stat b{display:block;font-size:18px}.tt-stat span{font-size:10px;color:light-dark(#6c7b77,#9aafa9)}.tt-btn{width:100%;min-height:46px;border:0;border-radius:14px;background:#31b97d;color:#07140f;font-weight:850;cursor:pointer;padding:11px 14px}.tt-btn.secondary{background:light-dark(#e5ece9,#20352f);color:inherit}.tt-badge{display:inline-block;padding:5px 9px;border-radius:999px;background:#31b97d22;color:#31b97d;font-size:11px;font-weight:800}.coin{font-size:34px;font-weight:900;letter-spacing:-.04em}.muted{color:light-dark(#687873,#9cafaa);font-size:12px}.flight-hero{text-align:center;padding:26px 12px}.flight-hero .plus{font-size:52px;font-weight:950;color:#31b97d}.thermal-ring{width:150px;height:150px;border-radius:50%;margin:18px auto;background:radial-gradient(circle,#13231f 0 37%,#ef7f45 38% 48%,#ef7f4530 49% 62%,transparent 63%);display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:900}.portfolio-item{display:grid;grid-template-columns:1fr auto;gap:5px;padding:12px 0;border-bottom:1px solid light-dark(#e0e6e4,#28413a)}.portfolio-item:last-child{border-bottom:0}.gain{color:#31b97d;font-weight:800}.rank{display:grid;grid-template-columns:35px 1fr auto;align-items:center;padding:13px 4px;border-bottom:1px solid light-dark(#e0e6e4,#28413a)}.rank.me{background:#31b97d18;border-radius:12px;padding:13px 9px;border:0}.tt-nav{display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid light-dark(#dbe3e0,#29413a);background:light-dark(#fff,#101e1a);padding:7px}.tt-nav button{border:0;background:transparent;color:light-dark(#6c7875,#94a9a3);min-height:50px;font-size:10px;font-weight:750;cursor:pointer;border-radius:12px}.tt-nav button.active{color:#31b97d;background:#31b97d18}.ico{display:block;font-size:19px;margin-bottom:2px}.toast{display:none;margin:10px 0;padding:11px;border-radius:12px;background:#31b97d22;color:#31b97d;font-weight:750;font-size:12px}.toast.show{display:block}
 .tt-thermal-marker{background:transparent;border:0}
@@ -132,6 +137,12 @@ function ttThermalIcon(state) {
 .tt-flight-thermal-meta{font-size:9px;line-height:1.45;color:light-dark(#687772,#9cafaa);margin-top:3px}.tt-flight-thermal-side{text-align:right;white-space:nowrap}
 .tt-flight-thermal-side strong{display:block;font-size:18px;font-weight:950}.tt-flight-thermal-side small{display:block;font-size:9px;margin-top:2px}.tt-flight-thermal-value{color:#31b97d;font-weight:850}
 
+
+.tt-income-toast{position:fixed;left:50%;top:18px;transform:translate(-50%,-140%);width:min(390px,calc(100% - 28px));box-sizing:border-box;z-index:10020;background:#10231d;color:#eef7f4;border:1px solid #315247;border-radius:18px;padding:14px 16px;box-shadow:0 12px 35px rgba(0,0,0,.28);opacity:0;pointer-events:none;transition:.28s ease}
+.tt-income-toast.show{transform:translate(-50%,0);opacity:1}
+.tt-income-toast-title{font-size:16px;font-weight:950;color:#55d39d}
+.tt-income-toast-lines{font-size:11px;line-height:1.5;margin-top:6px;color:#d4e4de}
+
 </style>
   <div class="tt-shell">
     <div class="tt-top"><div class="tt-brand">THERMAL TYCOON</div><div style="float:right;font-size:13px;font-weight:800"><span id="liveUsername">Pilot</span> · <span id="liveCoins">0</span> 🪙</div><div class="tt-title" id="screenTitle">Thermik-Karte</div><div class="tt-sub" id="screenSub">Fliegen. Entdecken. Besitzen.</div><button id="logoutSubmit" type="button" style="margin-top:8px;border:0;background:transparent;color:#31b97d;font-weight:800;padding:0">Ausloggen</button></div>
@@ -183,7 +194,7 @@ function ttThermalIcon(state) {
   <div class="tt-card">
     <div class="muted">PASSIVE EINNAHMEN</div><div id="portfolioIncomeTotal" class="coin" style="font-size:29px">+0 🪙</div>
     <div class="tt-statrow"><div class="tt-stat"><b id="portfolioIncomeToday">+0</b><span>Coins heute</span></div><div class="tt-stat"><b id="portfolioPaidUses">0</b><span>vergütete Nutzungen</span></div><div class="tt-stat"><b>4 %</b><span>pro Nutzung</span></div></div>
-    <div id="portfolioIncomeStatus" class="muted">Einnahmen werden separat geladen.</div>
+    <div id="portfolioIncomeStatus" class="muted">Einnahmen werden separat geladen.</div><div id="portfolioIncomeHistory" style="margin-top:12px"></div>
   </div>
   <div class="tt-card"><b>Deine Thermiken</b><div id="portfolioList" class="tt-discover-list" style="margin-top:10px"><div class="tt-discover-empty">Portfolio wird geladen …</div></div></div>
 </section>
@@ -198,7 +209,64 @@ function ttThermalIcon(state) {
 <nav class="tt-nav" aria-label="App Navigation"><button type="button" class="active" data-go="map"><span class="ico">⌖</span>Karte</button><button type="button" data-go="flight"><span class="ico">🪂</span>Flug</button><button type="button" data-go="discover"><span class="ico">🔥</span>Entdecken</button><button type="button" data-go="portfolio"><span class="ico">◫</span>Portfolio</button><button type="button" data-go="ranking"><span class="ico">🏆</span>Ranking</button></nav>
   </div>
   <script>
-    (()=>{const SUPABASE_URL='https://fdgslnifqifhormvogyn.supabase.co',SUPABASE_KEY='sb_publishable_9ZaI8qL-NMYug_xOUaWwtA_M5otiMAV',client=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);let currentUser=null;const loginBox=document.getElementById('thermal-login'),root=document.getElementById('thermal-tycoon');const recoveryBox=document.getElementById('recoveryBox'),recoveryStatus=document.getElementById('recoveryStatus');function showRecovery(){recoveryBox.style.display='block';loginBox.style.display='block';root.style.display='none';document.getElementById('loginStatus').textContent='Recovery-Link erkannt. Lege unten dein neues Passwort fest.'}if(location.hash.includes('type=recovery')||location.search.includes('type=recovery'))showRecovery();client.auth.onAuthStateChange((event)=>{if(event==='PASSWORD_RECOVERY')showRecovery()});document.getElementById('saveNewPassword').addEventListener('click',async()=>{const p1=document.getElementById('newPassword').value,p2=document.getElementById('newPassword2').value;if(p1.length<6){recoveryStatus.textContent='Bitte mindestens 6 Zeichen verwenden.';return}if(p1!==p2){recoveryStatus.textContent='Die Passwörter stimmen nicht überein.';return}recoveryStatus.textContent='Passwort wird gespeichert...';const{error}=await client.auth.updateUser({password:p1});if(error){recoveryStatus.textContent='Fehler: '+error.message;return}recoveryStatus.textContent='✓ Passwort geändert.';history.replaceState({},document.title,location.pathname);setTimeout(async()=>{await client.auth.signOut();recoveryBox.style.display='none';document.getElementById('loginStatus').textContent='Passwort geändert – bitte neu einloggen.'},800)});async function showUser(user){currentUser=user;const{data,error}=await client.from('profiles').select('username, coins').eq('id',user.id).single();if(error){document.getElementById('loginStatus').textContent='Profilfehler: '+error.message;loginBox.style.display='block';root.style.display='none';return}document.getElementById('liveUsername').textContent=data.username||'Pilot';document.getElementById('liveCoins').textContent=data.coins??0;loginBox.style.display='none';root.style.display='block';setTimeout(()=>{ensureMap();if(flightMap)flightMap.invalidateSize(true);loadSavedThermalSpots();},150)}document.getElementById('loginSubmit').addEventListener('click',async()=>{const email=document.getElementById('loginEmail').value.trim(),password=document.getElementById('loginPassword').value,status=document.getElementById('loginStatus');status.textContent='Einloggen...';const{data,error}=await client.auth.signInWithPassword({email,password});if(error){status.textContent='Fehler: '+error.message;return}status.textContent='';await showUser(data.user)});document.getElementById('logoutSubmit').addEventListener('click',async()=>{await client.auth.signOut();root.style.display='none';loginBox.style.display='block'});client.auth.getSession().then(({data})=>{if(data.session)showUser(data.session.user)});if(!root||root.dataset.ready)return;root.dataset.ready='1';const titles={map:['Thermik-Karte','Fliegen. Entdecken. Besitzen.'],flight:['IGC-Flug analysieren','Lies deinen echten Flug direkt im Browser ein.'],discover:['Thermik entdeckt','Claim sie, bevor es jemand anderes tut.'],thermal:['Thermik-Portfolio','Dein virtuelles Asset.'],portfolio:['Dein Portfolio','Thermiken arbeiten für dich.'],ranking:['Ranking','Miss dich mit anderen Piloten.']};function go(name){root.querySelectorAll('.tt-screen').forEach(x=>x.classList.toggle('active',x.dataset.screen===name));root.querySelectorAll('.tt-nav button').forEach(x=>x.classList.toggle('active',x.dataset.go===name));document.getElementById('screenTitle').textContent=titles[name][0];document.getElementById('screenSub').textContent=titles[name][1];if(name==='map'){ensureMap();setTimeout(()=>flightMap&&flightMap.invalidateSize(true),50);setTimeout(()=>flightMap&&flightMap.invalidateSize(true),250);}
+    (()=>{const SUPABASE_URL='https://fdgslnifqifhormvogyn.supabase.co',SUPABASE_KEY='sb_publishable_9ZaI8qL-NMYug_xOUaWwtA_M5otiMAV',client=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);let currentUser=null;const loginBox=document.getElementById('thermal-login'),root=document.getElementById('thermal-tycoon');const recoveryBox=document.getElementById('recoveryBox'),recoveryStatus=document.getElementById('recoveryStatus');function showRecovery(){recoveryBox.style.display='block';loginBox.style.display='block';root.style.display='none';document.getElementById('loginStatus').textContent='Recovery-Link erkannt. Lege unten dein neues Passwort fest.'}if(location.hash.includes('type=recovery')||location.search.includes('type=recovery'))showRecovery();client.auth.onAuthStateChange((event)=>{if(event==='PASSWORD_RECOVERY')showRecovery()});document.getElementById('saveNewPassword').addEventListener('click',async()=>{const p1=document.getElementById('newPassword').value,p2=document.getElementById('newPassword2').value;if(p1.length<6){recoveryStatus.textContent='Bitte mindestens 6 Zeichen verwenden.';return}if(p1!==p2){recoveryStatus.textContent='Die Passwörter stimmen nicht überein.';return}recoveryStatus.textContent='Passwort wird gespeichert...';const{error}=await client.auth.updateUser({password:p1});if(error){recoveryStatus.textContent='Fehler: '+error.message;return}recoveryStatus.textContent='✓ Passwort geändert.';history.replaceState({},document.title,location.pathname);setTimeout(async()=>{await client.auth.signOut();recoveryBox.style.display='none';document.getElementById('loginStatus').textContent='Passwort geändert – bitte neu einloggen.'},800)});
+async function showLoginIncomeToast(){
+  if(!currentUser)return;
+  const key='tt_income_seen_'+currentUser.id;
+  const now=new Date();
+  const lastRaw=localStorage.getItem(key);
+
+  // First use on this device establishes the checkpoint; old historical income is not replayed.
+  if(!lastRaw){
+    localStorage.setItem(key,now.toISOString());
+    return;
+  }
+
+  try{
+    const {data,error}=await client
+      .from('thermal_uses')
+      .select('owner_reward,used_at,thermal_id,thermal_spots!inner(id,name,owner_id)')
+      .eq('thermal_spots.owner_id',currentUser.id)
+      .gt('owner_reward',0)
+      .gt('used_at',lastRaw)
+      .order('used_at',{ascending:true});
+    if(error)throw error;
+
+    const rows=data||[];
+    if(!rows.length){
+      localStorage.setItem(key,now.toISOString());
+      return;
+    }
+
+    const grouped=new Map();
+    let total=0;
+    rows.forEach(r=>{
+      const reward=Number(r.owner_reward)||0;
+      total+=reward;
+      const s=r.thermal_spots||{};
+      const id=Number(s.id||r.thermal_id);
+      const name=s.name||('Thermik #'+id);
+      const g=grouped.get(id)||{name,coins:0,uses:0};
+      g.coins+=reward;g.uses++;
+      grouped.set(id,g);
+    });
+
+    document.getElementById('incomeLoginTotal').textContent='+'+total.toLocaleString('de-DE')+' Coins verdient!';
+    const items=[...grouped.values()];
+    document.getElementById('incomeLoginLines').innerHTML=items.slice(0,3).map(g=>
+      '🔥 '+g.name+' · +'+g.coins.toLocaleString('de-DE')+' 🪙'+(g.uses>1?' · '+g.uses+'×':'')
+    ).join('<br>')+(items.length>3?'<br>+'+(items.length-3)+' weitere Thermiken':'');
+    const toast=document.getElementById('incomeLoginToast');
+    toast.classList.add('show');
+    setTimeout(()=>toast.classList.remove('show'),5000);
+
+    // Mark these earnings as seen only after successful retrieval/render.
+    localStorage.setItem(key,now.toISOString());
+  }catch(e){
+    console.warn('Login-Einnahmen konnten nicht geladen werden:',e);
+  }
+}
+async function showUser(user){currentUser=user;const{data,error}=await client.from('profiles').select('username, coins').eq('id',user.id).single();if(error){document.getElementById('loginStatus').textContent='Profilfehler: '+error.message;loginBox.style.display='block';root.style.display='none';return}document.getElementById('liveUsername').textContent=data.username||'Pilot';document.getElementById('liveCoins').textContent=data.coins??0;loginBox.style.display='none';root.style.display='block';setTimeout(()=>{ensureMap();if(flightMap)flightMap.invalidateSize(true);loadSavedThermalSpots();},150);setTimeout(()=>showLoginIncomeToast(),450)}document.getElementById('loginSubmit').addEventListener('click',async()=>{const email=document.getElementById('loginEmail').value.trim(),password=document.getElementById('loginPassword').value,status=document.getElementById('loginStatus');status.textContent='Einloggen...';const{data,error}=await client.auth.signInWithPassword({email,password});if(error){status.textContent='Fehler: '+error.message;return}status.textContent='';await showUser(data.user)});document.getElementById('logoutSubmit').addEventListener('click',async()=>{await client.auth.signOut();root.style.display='none';loginBox.style.display='block'});client.auth.getSession().then(({data})=>{if(data.session)showUser(data.session.user)});if(!root||root.dataset.ready)return;root.dataset.ready='1';const titles={map:['Thermik-Karte','Fliegen. Entdecken. Besitzen.'],flight:['IGC-Flug analysieren','Lies deinen echten Flug direkt im Browser ein.'],discover:['Thermik entdeckt','Claim sie, bevor es jemand anderes tut.'],thermal:['Thermik-Portfolio','Dein virtuelles Asset.'],portfolio:['Dein Portfolio','Thermiken arbeiten für dich.'],ranking:['Ranking','Miss dich mit anderen Piloten.']};function go(name){root.querySelectorAll('.tt-screen').forEach(x=>x.classList.toggle('active',x.dataset.screen===name));root.querySelectorAll('.tt-nav button').forEach(x=>x.classList.toggle('active',x.dataset.go===name));document.getElementById('screenTitle').textContent=titles[name][0];document.getElementById('screenSub').textContent=titles[name][1];if(name==='map'){ensureMap();setTimeout(()=>flightMap&&flightMap.invalidateSize(true),50);setTimeout(()=>flightMap&&flightMap.invalidateSize(true),250);}
 if(name==='discover'){loadDiscover();}if(name==='portfolio'){loadPortfolio();}if(name==='ranking'){loadRanking();}}let flightMap=null,routeLayer=null,thermalLayers=[];function ensureMap(){if(flightMap||typeof L==='undefined')return;const el=document.getElementById('flightMap');if(!el)return;flightMap=L.map(el,{zoomControl:true}).setView([47.47,12.55],10);L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap'}).addTo(flightMap);const syncClimbLabels=()=>el.classList.toggle('show-climb',flightMap.getZoom()>=12);flightMap.on('zoomend',syncClimbLabels);syncClimbLabels();setTimeout(()=>flightMap&&flightMap.invalidateSize(true),0);setTimeout(()=>flightMap&&flightMap.invalidateSize(true),150);setTimeout(()=>flightMap&&flightMap.invalidateSize(true),500);if(typeof ResizeObserver!=='undefined'){new ResizeObserver(()=>{if(flightMap)setTimeout(()=>flightMap.invalidateSize(true),0)}).observe(el);}}function renderFlightMap(pts,thermals){ensureMap();if(!flightMap)return;if(routeLayer)flightMap.removeLayer(routeLayer);thermalLayers.forEach(x=>flightMap.removeLayer(x));thermalLayers=[];const route=pts.map(p=>[p.lat,p.lon]);routeLayer=L.polyline(route,{weight:3,opacity:.8}).addTo(flightMap);thermals.forEach((t,i)=>{const popup='<b>🔥 Thermik '+(i+1)+'</b><br>+'+Math.round(t.gain)+' m<br>Ø +'+t.avg.toFixed(1)+' m/s<br>max +'+t.maxClimb.toFixed(1)+' m/s<br>'+t.rotations.toFixed(1)+' Kreise<br>Radius Ø '+Math.round(t.radius)+' m';const c=L.circle([t.lat,t.lon],{radius:Math.max(35,Math.min(220,t.radius)),weight:2,color:'#31b97d',fillColor:'#31b97d',fillOpacity:.14}).addTo(flightMap);c.bindPopup(popup);thermalLayers.push(c);const icon=L.divIcon({className:'tt-thermal-marker',html:'<div class="flame">🔥<span class="num">'+(i+1)+'</span></div>',iconSize:[42,42],iconAnchor:[21,21],popupAnchor:[0,-22]});const marker=L.marker([t.lat,t.lon],{icon}).addTo(flightMap);marker.bindPopup(popup);thermalLayers.push(marker)});flightMap.fitBounds(routeLayer.getBounds(),{padding:[18,18]});document.getElementById('mapHint').textContent='Flugroute mit '+thermals.length+' erkannten Thermiken. Tippe auf einen Thermikkreis für Details.';setTimeout(()=>flightMap.invalidateSize(),100)}function coord(raw,degLen){return Number(raw.slice(0,degLen))+Number(raw.slice(degLen))/1000/60}function parseB(line){if(!/^B\d{6}\d{7}[NS]\d{8}[EW][AV]\d{5}\d{5}/.test(line))return null;const h=+line.slice(1,3),m=+line.slice(3,5),s=+line.slice(5,7);let lat=coord(line.slice(7,14),2),lon=coord(line.slice(15,23),3);if(line[14]==='S')lat=-lat;if(line[23]==='W')lon=-lon;const pressure=+line.slice(25,30),gps=+line.slice(30,35);return{sec:h*3600+m*60+s,lat,lon,alt:gps||pressure}}function fmtTime(sec){const h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60);return(h?h+' h ':'')+m+' min'}function dt(a,b){let d=b.sec-a.sec;if(d<0)d+=86400;return d}function bearing(a,b){const r=Math.PI/180,p1=a.lat*r,p2=b.lat*r,dl=(b.lon-a.lon)*r,y=Math.sin(dl)*Math.cos(p2),x=Math.cos(p1)*Math.sin(p2)-Math.sin(p1)*Math.cos(p2)*Math.cos(dl);return(Math.atan2(y,x)*180/Math.PI+360)%360}function turnDelta(a,b){let d=b-a;while(d>180)d-=360;while(d<-180)d+=360;return d}function distance(a,b){const r=6371000,q=Math.PI/180,p1=a.lat*q,p2=b.lat*q,dp=(b.lat-a.lat)*q,dl=(b.lon-a.lon)*q,x=Math.sin(dp/2)**2+Math.cos(p1)*Math.cos(p2)*Math.sin(dl/2)**2;return 2*r*Math.atan2(Math.sqrt(x),Math.sqrt(1-x))}function analyzeSegment(seg){if(seg.length<3)return null;const first=seg[0],last=seg.at(-1),dur=dt(first,last),gain=last.salt-first.salt,avg=dur?gain/dur:0;let maxClimb=0,totalTurn=0,absTurn=0,prevBearing=null;for(let j=1;j<seg.length;j++){const sd=dt(seg[j-1],seg[j]);if(sd>0&&sd<=15)maxClimb=Math.max(maxClimb,(seg[j].salt-seg[j-1].salt)/sd);const br=bearing(seg[j-1],seg[j]);if(prevBearing!==null){const td=turnDelta(prevBearing,br);if(Math.abs(td)<=100){totalTurn+=td;absTurn+=Math.abs(td)}}prevBearing=br}const rotations=Math.abs(totalTurn)/360,cx=seg.reduce((n,x)=>n+x.lat,0)/seg.length,cy=seg.reduce((n,x)=>n+x.lon,0)/seg.length,radii=seg.map(x=>distance({lat:cx,lon:cy},x)),radius=radii.reduce((n,x)=>n+x,0)/radii.length,maxRadius=Math.max(...radii);return{dur,gain,avg,maxClimb,rotations,absRotations:absTurn/360,lat:cx,lon:cy,radius,maxRadius,start:first,end:last}}function detectThermals(pts){const smooth=pts.map((p,i)=>{const a=Math.max(0,i-4),b=Math.min(pts.length,i+5),slice=pts.slice(a,b);return{...p,salt:slice.reduce((n,x)=>n+x.alt,0)/slice.length}}),raw=[];let start=null,lastUseful=null;function finish(end){if(start===null||end===null||end<=start)return;const t=analyzeSegment(smooth.slice(start,end+1));if(t&&t.dur>=45&&t.gain>=30&&t.avg>=.45&&t.rotations>=1.5&&t.absRotations>=1.8&&t.radius>=12&&t.radius<=220&&t.maxRadius<=450)raw.push(t)}for(let i=1;i<smooth.length;i++){const d=dt(smooth[i-1],smooth[i]);if(!d||d>15){finish(lastUseful);start=null;lastUseful=null;continue}const climb=(smooth[i].salt-smooth[i-1].salt)/d;if(climb>=-.15){if(start===null)start=i-1;if(climb>=.15)lastUseful=i}else if(start!==null&&lastUseful!==null&&dt(smooth[lastUseful],smooth[i])>25){finish(lastUseful);start=null;lastUseful=null}}finish(lastUseful);if(!raw.length)return raw;const merged=[raw[0]];for(let i=1;i<raw.length;i++){const prev=merged.at(-1),cur=raw[i],gap=dt(prev.end,cur.start),near=distance(prev,cur);if(gap<=45&&near<=350){const si=smooth.indexOf(prev.start),ei=smooth.indexOf(cur.end),combined=si>=0&&ei>=si?analyzeSegment(smooth.slice(si,ei+1)):null;if(combined&&combined.avg>=.35&&combined.rotations>=1.5&&combined.radius<=250&&combined.maxRadius<=500)merged[merged.length-1]=combined;else merged.push(cur)}else merged.push(cur)}return merged.filter(t=>t.rotations>=2&&t.dur>=55&&t.gain>=35&&t.avg>=.45)}function flightDistanceKm(pts){let total=0;for(let i=1;i<pts.length;i++)total+=distance(pts[i-1],pts[i]);return total/1000}function thermalPriceFromMax(maxClimb){
  const m=Number(maxClimb)||0;
  if(m<1)return 50;if(m<2)return 100;if(m<3)return 150;
@@ -396,7 +464,35 @@ async function loadRanking(){
  }catch(e){console.error('Ranking:',e);toast.textContent='Ranking konnte nicht geladen werden: '+(e.message||e)}
 }
 let portfolioRows=[];
+
+async function loadPortfolioIncomeHistory(){
+  const box=document.getElementById('portfolioIncomeHistory');
+  if(!box||!currentUser)return;
+  try{
+    const {data,error}=await client
+      .from('thermal_uses')
+      .select('owner_reward,used_at,thermal_id,thermal_spots!inner(id,name,owner_id)')
+      .eq('thermal_spots.owner_id',currentUser.id)
+      .gt('owner_reward',0)
+      .order('used_at',{ascending:false})
+      .limit(20);
+    if(error)throw error;
+    const rows=data||[];
+    if(!rows.length){box.innerHTML='<div class="muted">Noch kein Einnahmenverlauf.</div>';return}
+    box.innerHTML='<div class="muted" style="font-weight:850;margin-bottom:6px">EINNAHMENVERLAUF</div>'+
+      rows.map(r=>{
+        const s=r.thermal_spots||{},name=s.name||('Thermik #'+(s.id||r.thermal_id));
+        const d=new Date(r.used_at);
+        const when=d.toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit'})+' · '+d.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});
+        return '<div class="portfolio-item"><span><b>🔥 '+name+'</b><br><small class="muted">'+when+'</small></span><span class="gain">+'+(Number(r.owner_reward)||0)+' 🪙</span></div>';
+      }).join('');
+  }catch(e){
+    console.warn('Einnahmenverlauf:',e);
+    box.innerHTML='<div class="muted">Einnahmenverlauf derzeit nicht abrufbar.</div>';
+  }
+}
 async function loadPortfolioIncome(){
+ loadPortfolioIncomeHistory();
  const status=document.getElementById('portfolioIncomeStatus');if(!status||!currentUser)return;
  try{
   status.textContent='Passive Einnahmen werden geladen …';
