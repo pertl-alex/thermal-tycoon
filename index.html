@@ -593,3 +593,5 @@ document.getElementById('analyzeIgc').addEventListener('click',async()=>{
   summary.style.display='block';summary.innerHTML='<b>Import abgeschlossen</b><br>'+ok+' gültig · '+invalid+' ungültig<br>🎁 '+awarded+' neu vergütet = +'+coins+' 🪙<br>↺ '+duplicate+' bereits vergütet · 🗓️ '+old+' älter als 30 Tage<br>🔥 '+totalThermals+' Thermik-Treffer verarbeitet';
  }catch(err){console.error(err);toast.textContent='Import fehlgeschlagen: '+(err.message||err)}finally{btn.disabled=false;btn.textContent='Flüge importieren'}
 });})();
+
+</script>
