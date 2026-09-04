@@ -408,7 +408,7 @@ function renderRanking(){
  box.innerHTML=rows.length?rows.map((r,i)=>{
    const me=currentUser&&r.uid===currentUser.id;
    const score=rankingFilter==='count'?r.count+' 🔥':rankingFilter==='best'?'+'+r.best.toFixed(1)+' m/s':r.value.toLocaleString('de-DE')+' 🪙';
-   return `<div class="tt-rankrow ${me?'me':''}"><div class="tt-rankpos">${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</div><div><div class="tt-rankname">${shortPilot(r.uid)}</div><div class="tt-rankmeta">${r.count} Thermik${r.count===1?'':'en'} · ${r.uses} Nutzungen</div></div><div class="tt-rankscore">${score}<small>${me?'DEIN RANG':''}</small></div></div>`
+   return `<div class="tt-rankrow ${me?'me':''}"><div class="tt-rankpos">${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</div><div><div class="tt-rankname">${me?'Du':(r.name||shortPilot(r.uid))}</div><div class="tt-rankmeta">${r.count} Thermik${r.count===1?'':'en'} · ${r.uses} Nutzungen</div></div><div class="tt-rankscore">${score}<small>${me?'DEIN RANG':''}</small></div></div>`
  }).join(''):'<div class="tt-discover-empty">Noch keine Besitzer im Ranking.</div>';
 }
 async function loadRanking(){
@@ -417,7 +417,9 @@ async function loadRanking(){
    const {data,error}=await client.from('thermal_spots').select('owner_id,value,max_climb,flight_count').not('owner_id','is',null);
    if(error)throw error;
    const map=new Map();
-   (data||[]).forEach(s=>{const uid=s.owner_id;if(!uid)return;let r=map.get(uid)||{uid,value:0,count:0,best:0,uses:0};r.count++;r.value+=Number(s.value)||thermalPriceFromMax(Number(s.max_climb)||0);r.best=Math.max(r.best,Number(s.max_climb)||0);r.uses+=Number(s.flight_count)||0;map.set(uid,r)});
+   (data||[]).forEach(s=>{const uid=s.owner_id;if(!uid)return;let r=map.get(uid)||{uid,value:0,count:0,best:0,uses:0,name:null};r.count++;r.value+=Number(s.value)||thermalPriceFromMax(Number(s.max_climb)||0);r.best=Math.max(r.best,Number(s.max_climb)||0);r.uses+=Number(s.flight_count)||0;map.set(uid,r)});
+   const ownerIds=[...map.keys()];
+   if(ownerIds.length){const {data:profiles,error:profileError}=await client.from('profiles').select('id,username').in('id',ownerIds);if(profileError)throw profileError;(profiles||[]).forEach(p=>{const r=map.get(p.id);if(r)r.name=p.username||null})}
    rankingRows=[...map.values()];toast.textContent='';renderRanking();
  }catch(e){console.error('Ranking:',e);toast.textContent='Ranking konnte nicht geladen werden: '+(e.message||e)}
 }
