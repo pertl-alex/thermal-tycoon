@@ -78,8 +78,8 @@ function ttThermalIcon(state) {
 
 .tt-sheet-backdrop{position:fixed;inset:0;background:rgba(7,20,15,.28);opacity:0;pointer-events:none;transition:.2s;z-index:9998}
 .tt-sheet-backdrop.open{opacity:1;pointer-events:auto}
-.tt-sheet{position:fixed;left:50%;top:0;bottom:0;margin-top:auto;margin-bottom:auto;height:max-content;width:min(560px,calc(100% - 28px));transform:translateX(-50%) scale(.96);opacity:0;pointer-events:none;transition:.24s;z-index:9999;background:#fff;border-radius:26px;box-shadow:0 -12px 40px rgba(0,0,0,.18);padding:10px 20px calc(20px + env(safe-area-inset-bottom));box-sizing:border-box}
-.tt-sheet.open{transform:translateX(-50%) scale(1);opacity:1;pointer-events:auto}
+.tt-sheet{position:fixed;left:50%;top:50%;bottom:auto;margin:0;height:max-content;width:min(560px,calc(100% - 28px));transform:translate(-50%,-50%) scale(.96);opacity:0;pointer-events:none;transition:.24s;z-index:9999;background:#fff;border-radius:26px;box-shadow:0 -12px 40px rgba(0,0,0,.18);padding:10px 20px calc(20px + env(safe-area-inset-bottom));box-sizing:border-box}
+.tt-sheet.open{transform:translate(-50%,-50%) scale(1);opacity:1;pointer-events:auto}
 .tt-sheet-handle{width:44px;height:5px;border-radius:999px;background:#d7dfdb;margin:2px auto 15px}
 .tt-sheet-top{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
 .tt-sheet-status{display:inline-flex;padding:7px 11px;border-radius:999px;background:#e7f7f0;color:#20a970;font-size:12px;font-weight:850;text-transform:uppercase}
@@ -238,6 +238,8 @@ if(name==='discover'){loadDiscover();}if(name==='portfolio'){loadPortfolio();}if
  if(m<1)return 50;if(m<2)return 100;if(m<3)return 150;
  if(m<4)return 200;if(m<5)return 300;if(m<6)return 400;return 500;
 }
+function centerThermalSheet(){const sheet=document.getElementById('ttThermalSheet');if(!sheet)return;const vv=window.visualViewport;const centerY=vv?(vv.offsetTop+vv.height/2):(window.innerHeight/2);sheet.style.top=centerY+'px';}
+window.addEventListener('resize',centerThermalSheet);if(window.visualViewport){window.visualViewport.addEventListener('resize',centerThermalSheet);window.visualViewport.addEventListener('scroll',centerThermalSheet);}
 window.closeThermalSheet=function(){
  document.getElementById('ttThermalSheet')?.classList.remove('open');
  document.getElementById('ttSheetBackdrop')?.classList.remove('open');
@@ -256,7 +258,7 @@ window.openThermalSheet=function(s,state){
  if(state==='explored'){b.style.display='block';b.textContent='Für '+price+' 🪙 kaufen';b.onclick=async()=>{await window.buyThermalSpot(Number(s.id));window.closeThermalSheet()}}
  else{b.style.display='none';b.onclick=null}
  const rb=document.getElementById('ttSheetRename');if(state==='mine'){rb.style.display='block';rb.onclick=async()=>{const oldName=s.name||('Thermik #'+s.id),name=prompt('Neuer Name für diese Thermik:',oldName);if(name===null)return;const clean=name.trim();if(!clean||clean.length>40){alert('Bitte einen Namen mit 1–40 Zeichen eingeben.');return}const {error}=await client.rpc('rename_my_thermal',{p_thermal_id:Number(s.id),p_name:clean});if(error){alert('Umbenennen fehlgeschlagen: '+error.message);return}s.name=clean;document.getElementById('ttSheetTitle').textContent=clean;await loadSavedThermalSpots();await loadPortfolio();await loadDiscover();};}else{rb.style.display='none';rb.onclick=null}
- document.getElementById('ttSheetBackdrop').classList.add('open');document.getElementById('ttThermalSheet').classList.add('open');
+ centerThermalSheet();document.getElementById('ttSheetBackdrop').classList.add('open');document.getElementById('ttThermalSheet').classList.add('open');
 };
 let mapSelectedSpot=null,mapSelectedState=null,mapSelectedMarker=null,mapSpotItems=[];
 function mapMarkerSize(max){return Math.round(Math.max(30,Math.min(48,30+(Number(max)||0)*3)));}
