@@ -4,10 +4,10 @@
 <div id="ttSheetBackdrop" class="tt-sheet-backdrop" onclick="window.closeThermalSheet()"></div>
 <div id="ttThermalSheet" class="tt-sheet">
  <div class="tt-sheet-handle"></div>
- <div class="tt-sheet-top"><div><div id="ttSheetStatus" class="tt-sheet-status">Thermik</div><div id="ttSheetTitle" class="tt-sheet-title">Thermik</div><div id="ttSheetSub" class="tt-sheet-sub"></div></div><button class="tt-sheet-close" onclick="window.closeThermalSheet()">×</button></div>
+ <div class="tt-sheet-top"><div><div id="ttSheetStatus" class="tt-sheet-status">Thermik</div><div class="tt-sheet-title-row"><div id="ttSheetTitle" class="tt-sheet-title">Thermik</div><button id="ttSheetRename" class="tt-sheet-rename-icon" style="display:none" title="Thermik umbenennen" aria-label="Thermik umbenennen">✏️</button></div><div id="ttSheetSub" class="tt-sheet-sub"></div></div><button class="tt-sheet-close" onclick="window.closeThermalSheet()">×</button></div>
  <div class="tt-sheet-hero"><strong id="ttSheetMax">+0.0</strong><span>m/s maximales Steigen</span></div>
  <div class="tt-sheet-grid"><div class="tt-sheet-stat"><strong id="ttSheetAvg">+0.0</strong><span>m/s Ø</span></div><div class="tt-sheet-stat"><strong id="ttSheetRadius">0 m</strong><span>Radius</span></div><div class="tt-sheet-stat"><strong id="ttSheetUses">0</strong><span>Nutzungen</span></div></div>
- <div id="ttSheetOwner" class="tt-sheet-owner"></div><button id="ttSheetRename" class="tt-sheet-buy" style="display:none;background:#eef3f1;color:#13201d">✏️ Thermik umbenennen</button><button id="ttSheetBuy" class="tt-sheet-buy" style="display:none"></button>
+ <div id="ttSheetOwner" class="tt-sheet-owner"></div><button id="ttSheetBuy" class="tt-sheet-buy" style="display:none"></button>
 </div>
 <script>
 function ttThermalState(spot) {
@@ -78,22 +78,23 @@ function ttThermalIcon(state) {
 
 .tt-sheet-backdrop{position:fixed;inset:0;background:rgba(7,20,15,.28);opacity:0;pointer-events:none;transition:.2s;z-index:9998}
 .tt-sheet-backdrop.open{opacity:1;pointer-events:auto}
-.tt-sheet{position:fixed;left:50%;top:50%;bottom:auto;margin:0;height:max-content;width:min(560px,calc(100% - 28px));transform:translate(-50%,-50%) scale(.96);opacity:0;pointer-events:none;transition:.24s;z-index:9999;background:#fff;border-radius:26px;box-shadow:0 -12px 40px rgba(0,0,0,.18);padding:10px 20px calc(20px + env(safe-area-inset-bottom));box-sizing:border-box}
+.tt-sheet{position:fixed;left:50%;top:50%;bottom:auto;margin:0;height:max-content;width:min(560px,calc(100% - 28px));transform:translate(-50%,-50%) scale(.96);opacity:0;pointer-events:none;transition:.24s;z-index:9999;background:#fff;border-radius:26px;box-shadow:0 -12px 40px rgba(0,0,0,.18);padding:8px 18px calc(16px + env(safe-area-inset-bottom));box-sizing:border-box}
 .tt-sheet.open{transform:translate(-50%,-50%) scale(1);opacity:1;pointer-events:auto}
-.tt-sheet-handle{width:44px;height:5px;border-radius:999px;background:#d7dfdb;margin:2px auto 15px}
+.tt-sheet-handle{width:44px;height:5px;border-radius:999px;background:#d7dfdb;margin:2px auto 10px}
 .tt-sheet-top{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
 .tt-sheet-status{display:inline-flex;padding:7px 11px;border-radius:999px;background:#e7f7f0;color:#20a970;font-size:12px;font-weight:850;text-transform:uppercase}
-.tt-sheet-title{font-size:23px;line-height:1.1;font-weight:900;margin:10px 0 4px;color:#0d1713}
+.tt-sheet-title{font-size:23px;line-height:1.1;font-weight:900;margin:8px 0 3px;color:#0d1713}
 .tt-sheet-sub{font-size:13px;color:#6f7c76}
+.tt-sheet-title-row{display:flex;align-items:center;gap:7px}.tt-sheet-rename-icon{border:0;background:transparent;padding:2px 3px;font-size:17px;line-height:1;cursor:pointer;border-radius:8px}.tt-sheet-rename-icon:hover{background:#eef3f1}
 .tt-sheet-close{border:0;background:#eef3f1;width:38px;height:38px;border-radius:50%;font-size:22px}
-.tt-sheet-hero{margin:18px 0 12px;background:#eef4f1;border-radius:20px;padding:16px;text-align:center}
-.tt-sheet-hero strong{display:block;font-size:36px;line-height:1;font-weight:900}
+.tt-sheet-hero{margin:13px 0 9px;background:#eef4f1;border-radius:18px;padding:12px;text-align:center}
+.tt-sheet-hero strong{display:block;font-size:32px;line-height:1;font-weight:900}
 .tt-sheet-hero span{display:block;margin-top:5px;color:#65736d;font-size:13px}
-.tt-sheet-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:10px 0 14px}
-.tt-sheet-stat{background:#f1f5f3;border-radius:17px;padding:12px 8px;text-align:center}
+.tt-sheet-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0 10px}
+.tt-sheet-stat{background:#f1f5f3;border-radius:15px;padding:9px 7px;text-align:center}
 .tt-sheet-stat strong{display:block;font-size:18px;font-weight:900}
 .tt-sheet-stat span{display:block;margin-top:3px;font-size:11px;color:#748079}
-.tt-sheet-owner{padding:11px 2px 4px;color:#5e6b65;font-size:13px}
+.tt-sheet-owner{padding:7px 2px 2px;color:#5e6b65;font-size:13px}
 .tt-sheet-buy{width:100%;margin-top:12px;padding:14px;border:0;border-radius:16px;background:#31b97d;color:#07140f;font-size:16px;font-weight:900}
 @media(min-width:700px){.tt-sheet{border-radius:26px}}
 .tt-dropzone{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:145px;margin:14px 0 9px;border:2px dashed #b9cbc5;border-radius:20px;background:#f2f7f5;cursor:pointer;padding:18px;box-sizing:border-box}.tt-drop-icon{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;background:#31b97d;color:#07140f;font-size:28px;margin-bottom:9px}.tt-dropzone>span:last-child{font-size:11px;margin-top:4px;color:#6c7b77}.tt-selected-file{font-size:12px;color:#65746f;margin:0 2px 12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tt-flight-result-head{display:flex;justify-content:space-between;gap:12px}.tt-flight-score{min-width:72px;text-align:center;background:#31b97d18;border-radius:16px;padding:10px 8px}.tt-flight-score strong{display:block;color:#31b97d;font-size:26px}.tt-flight-score span{font-size:10px}.tt-flight-mainstats,.tt-flight-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0 9px}.tt-flight-mainstats>div,.tt-flight-summary>div{background:#edf3f0;border-radius:16px;padding:12px 7px;text-align:center}.tt-flight-mainstats strong,.tt-flight-summary strong{display:block;font-size:16px}.tt-flight-mainstats span,.tt-flight-summary small{display:block;font-size:9px;color:#687873;margin-top:3px}.tt-flight-summary span{display:block;font-size:18px}.tt-flight-meta{text-align:center;font-size:11px;color:#687873;margin:4px 0 12px}
@@ -158,19 +159,21 @@ function ttThermalIcon(state) {
 @media(max-height:760px){#thermal-login,.tt-shell{height:calc(100dvh - 16px);min-height:0;}#thermal-login{margin:8px auto!important;}}
 
 .tt-map-status{display:inline-flex;align-items:center;gap:5px;margin-bottom:5px;padding:5px 10px;border-radius:999px;font-size:11px;font-weight:900;letter-spacing:.03em}.tt-map-status.mine{color:#1ab779;background:#e4f7ef}.tt-map-status.other{color:#c99a00;background:#fff5d8}.tt-map-status.explored{color:#303633;background:#edf1ef}
+
+.tt-map-filter{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.tt-map-filter button{display:inline-flex;align-items:center;gap:5px;border:0;background:transparent;padding:2px 0;color:inherit;font:inherit;font-size:11px;cursor:pointer}.tt-map-filter button i{display:inline-block;width:16px;height:16px;border:2px solid #303633;border-radius:50%;box-sizing:border-box;background:transparent}.tt-map-filter button i.mine{border-color:#31b97d}.tt-map-filter button i.other{border-color:#d8a900}.tt-map-filter button.active i{background:#303633}.tt-map-filter button.active i.mine{background:#31b97d}.tt-map-filter button.active i.other{background:#d8a900}
 </style>
   <div class="tt-shell">
     <div class="tt-top"><div class="tt-brand">THERMAL TYCOON</div><button id="accountToggle" type="button" style="float:right;border:0;background:transparent;font-size:13px;font-weight:850;color:inherit;padding:0;cursor:pointer"><span id="liveUsername">Pilot</span> · <span id="liveCoins">0</span> 🪙 ▾</button><div class="tt-title" id="screenTitle">Thermik-Karte</div><div class="tt-sub" id="screenSub">Fliegen. Entdecken. Besitzen.</div><div id="accountPanel" class="tt-card" style="display:none;margin:12px 0 0;padding:12px"><div class="muted">PILOTENNAME</div><div style="display:flex;gap:8px;margin-top:7px"><input id="usernameInput" maxlength="24" style="flex:1;min-width:0;padding:10px;border:1px solid #ccd8d4;border-radius:12px;font:inherit" placeholder="Pilotenname"><button id="saveUsername" type="button" class="tt-btn" style="width:auto;min-height:40px;padding:8px 13px">Speichern</button></div><div id="accountStatus" class="muted" style="margin-top:6px"></div><button id="logoutSubmit" type="button" style="margin-top:10px;border:0;background:transparent;color:#31b97d;font-weight:850;padding:0">Abmelden</button></div></div>
 
     <section class="tt-screen active" data-screen="map">
-      <div id="flightMap" class="tt-map"></div><div class="tt-map-legend"><span><i class="mine"></i>Meine</span><span><i></i>Kaufbar</span><span><i class="other"></i>Andere Besitzer</span></div><div class="muted" id="mapHint" style="margin-top:8px">Gespeicherte Thermiken werden geladen…</div>
+      <div id="flightMap" class="tt-map"></div><div class="tt-map-legend tt-map-filter"><button type="button" data-map-filter="mine" class="active"><i class="mine"></i>Meine</button><button type="button" data-map-filter="explored" class="active"><i></i>Kaufbar</button><button type="button" data-map-filter="other"><i class="other"></i>Andere Besitzer</button></div><div class="muted" id="mapHint" style="margin-top:8px">Gespeicherte Thermiken werden geladen…</div>
       <div class="tt-card" id="mapSelectedCard"><div class="tt-map-card-head"><button class="tt-map-cycle" id="mapPrevMine" type="button" aria-label="Vorherige sichtbare Thermik">‹</button><div class="tt-map-card-center"><span class="tt-map-status explored" id="mapSelectedBadge">⚫ KAUFBARE THERMIK</span><h3 id="mapSelectedTitle" style="margin:2px 0 2px;font-size:18px">Thermik auswählen</h3><div class="muted" id="mapSelectedSub">Tippe auf einen Marker auf der Karte.</div></div><button class="tt-map-cycle" id="mapNextMine" type="button" aria-label="Nächste sichtbare Thermik">›</button></div><div class="tt-statrow tt-map-selected-stats"><div class="tt-stat"><b id="mapSelectedMax">–</b><span>m/s max.</span></div><div class="tt-stat"><b id="mapSelectedAvg">–</b><span>m/s Ø</span></div><div class="tt-stat"><b id="mapSelectedValue">–</b><span>Wert 🪙</span></div><div class="tt-stat"><b id="mapSelectedUses">–</b><span>Nutzungen</span></div></div><button class="tt-btn" type="button" id="openThermal">Thermik ansehen</button><div class="tt-map-cycle-note" id="mapCycleNote">Mit den Pfeilen durch sichtbare Thermiken wechseln.</div></div>
     </section>
 
     <section class="tt-screen" data-screen="flight">
 <div class="tt-card"><span class="tt-badge">🪂 FLÜGE IMPORTIEREN</span><h3 style="margin:10px 0 5px">IGC-Flüge hochladen</h3><p class="muted">Einzelne oder mehrere IGC-Dateien auswählen – oder ein ZIP, z. B. „ALL IGC“ von XContest.</p><label class="tt-dropzone" for="igcFile"><span class="tt-drop-icon">＋</span><strong>IGC / ZIP auswählen</strong><span>Mehrfachauswahl möglich · .igc oder .zip</span></label><input id="igcFile" type="file" accept=".igc,.zip,text/plain,application/zip" multiple style="display:none"><div id="selectedIgcName" class="tt-selected-file">Noch keine Datei ausgewählt</div><button class="tt-btn" type="button" id="analyzeIgc">Flüge importieren</button><div class="toast" id="igcToast"></div><div id="batchSummary" class="muted" style="display:none;margin-top:10px;line-height:1.55"></div></div>
 <div class="tt-card" id="igcResult" style="display:none"><div class="tt-flight-result-head"><div><span class="tt-badge">✓ FLUG ANALYSIERT</span><h3 id="igcName" style="margin:10px 0 2px;font-size:17px">–</h3><div class="muted" id="igcCoords"></div></div><div class="tt-flight-score"><strong id="flightThermalScore">0</strong><span>Thermiken</span></div></div><div class="tt-flight-mainstats"><div><strong id="igcDistance">–</strong><span>Distanz</span></div><div><strong id="igcDuration">–</strong><span>Flugzeit</span></div><div><strong id="igcMaxAlt">–</strong><span>Max. Höhe</span></div></div><div class="tt-flight-summary"><div><span>🔥</span><strong id="flightThermals">0</strong><small>erkannte Thermiken</small></div><div><span>⬆</span><strong id="igcGain">0 m</strong><small>Thermik-Höhengewinn</small></div><div><span>⚡</span><strong id="flightStrongest">+0.0</strong><small>stärkste Thermik m/s</small></div></div><div id="flightThermalBreakdown" style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:10px 0"><div style="padding:9px 5px;border-radius:12px;background:#31b97d14;text-align:center"><b id="flightNewCount" style="display:block;color:#17865d;font-size:17px">0</b><small>Neu entdeckt</small></div><div style="padding:9px 5px;border-radius:12px;background:#1111;text-align:center"><b id="flightKnownCount" style="display:block;font-size:17px">0</b><small>Bekannt</small></div><div style="padding:9px 5px;border-radius:12px;background:#d8a90014;text-align:center"><b id="flightForeignCount" style="display:block;color:#9a7500;font-size:17px">0</b><small>Fremd</small></div></div><div class="tt-flight-meta"><span id="igcPoints">0</span> Trackpunkte</div><div id="flightBonusStatus" class="toast" style="display:block;margin:8px 0;background:#31b97d18;color:#17865d;font-weight:800">🎁 +10 🪙 für neue gültige Flüge (≥20 min, ≥1 Thermik, max. 30 Tage alt).</div><button class="tt-btn secondary" type="button" id="showFlightOnMap">Thermiken auf Karte ansehen</button></div>
-<div class="tt-card" id="thermalResult" style="display:none"><span class="tt-badge">🔥 THERMIKEN DES FLUGES</span><h3 style="margin:10px 0 4px" id="thermalCount">0 Thermiken</h3><p class="muted">Erkannte Kreis-Steigphasen dieses Fluges.</p><div id="thermalList" class="tt-flight-thermal-list"></div></div></section>
+<div class="tt-card" id="thermalResult" style="display:none"><span class="tt-badge">🔥 THERMIKEN DES FLUGES</span><h3 style="margin:8px 0 3px" id="thermalCount">0 Thermiken</h3><p class="muted">Erkannte Kreis-Steigphasen dieses Fluges.</p><div id="thermalList" class="tt-flight-thermal-list"></div></div></section>
 <section class="tt-screen" data-screen="discover">
   <div class="tt-discover-head">
     <div>
@@ -278,7 +281,10 @@ window.openThermalSheet=function(s,state){
  const rb=document.getElementById('ttSheetRename');if(state==='mine'){rb.style.display='block';rb.onclick=async()=>{const oldName=s.name||('Thermik #'+s.id),name=prompt('Neuer Name für diese Thermik:',oldName);if(name===null)return;const clean=name.trim();if(!clean||clean.length>40){alert('Bitte einen Namen mit 1–40 Zeichen eingeben.');return}const {error}=await client.rpc('rename_my_thermal',{p_thermal_id:Number(s.id),p_name:clean});if(error){alert('Umbenennen fehlgeschlagen: '+error.message);return}s.name=clean;document.getElementById('ttSheetTitle').textContent=clean;await loadSavedThermalSpots();await loadPortfolio();await loadDiscover();};}else{rb.style.display='none';rb.onclick=null}
  centerThermalSheet();document.getElementById('ttSheetBackdrop').classList.add('open');document.getElementById('ttThermalSheet').classList.add('open');
 };
-let mapSelectedSpot=null,mapSelectedState=null,mapSelectedMarker=null,mapSpotItems=[];
+let mapSelectedSpot=null,mapSelectedState=null,mapSelectedMarker=null,mapSpotItems=[];const mapFilters={mine:true,explored:true,other:false};
+function filteredMapItems(){return mapSpotItems.filter(x=>mapFilters[x.state]);}
+function applyMapFilters(){mapSpotItems.forEach(x=>{if(mapFilters[x.state]){if(!flightMap.hasLayer(x.marker))x.marker.addTo(flightMap)}else if(flightMap.hasLayer(x.marker))flightMap.removeLayer(x.marker)});if(mapSelectedSpot&&!mapFilters[mapSelectedState]){const bounds=flightMap&&flightMap.getBounds?flightMap.getBounds():null;const next=filteredMapItems().find(x=>!bounds||bounds.contains([x.s._lat,x.s._lon]))||filteredMapItems()[0];if(next)selectMapThermal(next.s,next.state,next.marker);else{mapSelectedSpot=null;mapSelectedState=null;mapSelectedMarker=null;document.getElementById('mapSelectedTitle').textContent='Keine Thermik ausgewählt';document.getElementById('mapSelectedSub').textContent='Aktiviere oben mindestens eine Kategorie.'}}}
+
 function mapMarkerSize(max){return Math.round(Math.max(30,Math.min(48,30+(Number(max)||0)*3)));}
 function selectMapThermal(s,state,marker){
  mapSelectedSpot=s;mapSelectedState=state;
@@ -293,7 +299,7 @@ function selectMapThermal(s,state,marker){
  document.getElementById('mapSelectedValue').textContent=value.toLocaleString('de-DE');
  document.getElementById('mapSelectedUses').textContent=uses;
  const bounds=flightMap&&flightMap.getBounds?flightMap.getBounds():null;
- const visible=mapSpotItems.filter(x=>(!bounds||bounds.contains([x.s._lat,x.s._lon])));
+ const visible=filteredMapItems().filter(x=>(!bounds||bounds.contains([x.s._lat,x.s._lon])));
  const visibleIndex=visible.findIndex(x=>Number(x.s.id)===Number(s.id));
  const canCycle=visible.length>1;
  document.getElementById('mapPrevMine').disabled=!canCycle;
@@ -322,13 +328,14 @@ setTimeout(()=>flightMap.invalidateSize(),100)
 }
 function cycleVisibleThermal(dir){
  const bounds=flightMap&&flightMap.getBounds?flightMap.getBounds():null;
- const visible=mapSpotItems.filter(x=>(!bounds||bounds.contains([x.s._lat,x.s._lon])));if(!visible.length)return;
+ const visible=filteredMapItems().filter(x=>(!bounds||bounds.contains([x.s._lat,x.s._lon])));if(!visible.length)return;
  let idx=visible.findIndex(x=>mapSelectedSpot&&Number(x.s.id)===Number(mapSelectedSpot.id));
  if(idx<0)idx=dir>0?-1:0;idx=(idx+dir+visible.length)%visible.length;
  const item=visible[idx];selectMapThermal(item.s,item.state,item.marker);flightMap.panTo([item.s._lat,item.s._lon]);
 }
 document.getElementById('mapPrevMine').addEventListener('click',()=>cycleVisibleThermal(-1));
 document.getElementById('mapNextMine').addEventListener('click',()=>cycleVisibleThermal(1));
+document.querySelectorAll('[data-map-filter]').forEach(btn=>btn.addEventListener('click',()=>{const key=btn.dataset.mapFilter;mapFilters[key]=!mapFilters[key];btn.classList.toggle('active',mapFilters[key]);applyMapFilters();}));
 window.buyThermalSpot=async function(thermalId){
   if(!currentUser){alert('Bitte zuerst anmelden.');return}
 
