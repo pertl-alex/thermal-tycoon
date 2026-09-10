@@ -157,14 +157,14 @@ function ttThermalIcon(state) {
 .tt-nav{flex:0 0 auto;margin-top:auto;}
 @media(max-height:760px){#thermal-login,.tt-shell{height:calc(100dvh - 16px);min-height:0;}#thermal-login{margin:8px auto!important;}}
 
-.tt-map-filter{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:0 0 14px}.tt-map-filter button{border:1px solid #dce5e1;background:#fff;color:#53625d;border-radius:12px;padding:9px 5px;font:inherit;font-size:12px;font-weight:850;cursor:pointer;opacity:.48;transition:.15s}.tt-map-filter button.active{opacity:1;background:#f3f7f5;box-shadow:0 1px 4px rgba(13,25,22,.08)}.tt-map-filter button.mine.active{border-color:#31b97d}.tt-map-filter button.other.active{border-color:#d5aa22}.tt-map-filter button.explored.active{border-color:#303633}
+.tt-map-status{display:inline-flex;align-items:center;gap:5px;margin-bottom:5px;padding:5px 10px;border-radius:999px;font-size:11px;font-weight:900;letter-spacing:.03em}.tt-map-status.mine{color:#1ab779;background:#e4f7ef}.tt-map-status.other{color:#c99a00;background:#fff5d8}.tt-map-status.explored{color:#303633;background:#edf1ef}
 </style>
   <div class="tt-shell">
     <div class="tt-top"><div class="tt-brand">THERMAL TYCOON</div><button id="accountToggle" type="button" style="float:right;border:0;background:transparent;font-size:13px;font-weight:850;color:inherit;padding:0;cursor:pointer"><span id="liveUsername">Pilot</span> · <span id="liveCoins">0</span> 🪙 ▾</button><div class="tt-title" id="screenTitle">Thermik-Karte</div><div class="tt-sub" id="screenSub">Fliegen. Entdecken. Besitzen.</div><div id="accountPanel" class="tt-card" style="display:none;margin:12px 0 0;padding:12px"><div class="muted">PILOTENNAME</div><div style="display:flex;gap:8px;margin-top:7px"><input id="usernameInput" maxlength="24" style="flex:1;min-width:0;padding:10px;border:1px solid #ccd8d4;border-radius:12px;font:inherit" placeholder="Pilotenname"><button id="saveUsername" type="button" class="tt-btn" style="width:auto;min-height:40px;padding:8px 13px">Speichern</button></div><div id="accountStatus" class="muted" style="margin-top:6px"></div><button id="logoutSubmit" type="button" style="margin-top:10px;border:0;background:transparent;color:#31b97d;font-weight:850;padding:0">Abmelden</button></div></div>
 
     <section class="tt-screen active" data-screen="map">
       <div id="flightMap" class="tt-map"></div><div class="tt-map-legend"><span><i class="mine"></i>Meine</span><span><i></i>Kaufbar</span><span><i class="other"></i>Andere Besitzer</span></div><div class="muted" id="mapHint" style="margin-top:8px">Gespeicherte Thermiken werden geladen…</div>
-      <div class="tt-card" id="mapSelectedCard"><div class="tt-map-filter" id="mapThermalFilter" aria-label="Thermiken filtern"><button type="button" class="active mine" data-map-filter="mine">🟢 Meine Thermiken</button><button type="button" class="active explored" data-map-filter="explored">⚫ Kaufbar</button><button type="button" class="active other" data-map-filter="other">🟡 Anderer Besitzer</button></div><div class="tt-map-card-head"><button class="tt-map-cycle" id="mapPrevMine" type="button" aria-label="Vorherige sichtbare Thermik">‹</button><div class="tt-map-card-center"><h3 id="mapSelectedTitle" style="margin:2px 0 2px;font-size:18px">Thermik auswählen</h3><div class="muted" id="mapSelectedSub">Tippe auf einen Marker auf der Karte.</div></div><button class="tt-map-cycle" id="mapNextMine" type="button" aria-label="Nächste sichtbare Thermik">›</button></div><div class="tt-statrow tt-map-selected-stats"><div class="tt-stat"><b id="mapSelectedMax">–</b><span>m/s max.</span></div><div class="tt-stat"><b id="mapSelectedAvg">–</b><span>m/s Ø</span></div><div class="tt-stat"><b id="mapSelectedValue">–</b><span>Wert 🪙</span></div><div class="tt-stat"><b id="mapSelectedUses">–</b><span>Nutzungen</span></div></div><button class="tt-btn" type="button" id="openThermal">Thermik ansehen</button><div class="tt-map-cycle-note" id="mapCycleNote">Mit den Pfeilen durch sichtbare Thermiken wechseln.</div></div>
+      <div class="tt-card" id="mapSelectedCard"><div class="tt-map-card-head"><button class="tt-map-cycle" id="mapPrevMine" type="button" aria-label="Vorherige sichtbare Thermik">‹</button><div class="tt-map-card-center"><span class="tt-map-status explored" id="mapSelectedBadge">⚫ KAUFBARE THERMIK</span><h3 id="mapSelectedTitle" style="margin:2px 0 2px;font-size:18px">Thermik auswählen</h3><div class="muted" id="mapSelectedSub">Tippe auf einen Marker auf der Karte.</div></div><button class="tt-map-cycle" id="mapNextMine" type="button" aria-label="Nächste sichtbare Thermik">›</button></div><div class="tt-statrow tt-map-selected-stats"><div class="tt-stat"><b id="mapSelectedMax">–</b><span>m/s max.</span></div><div class="tt-stat"><b id="mapSelectedAvg">–</b><span>m/s Ø</span></div><div class="tt-stat"><b id="mapSelectedValue">–</b><span>Wert 🪙</span></div><div class="tt-stat"><b id="mapSelectedUses">–</b><span>Nutzungen</span></div></div><button class="tt-btn" type="button" id="openThermal">Thermik ansehen</button><div class="tt-map-cycle-note" id="mapCycleNote">Mit den Pfeilen durch sichtbare Thermiken wechseln.</div></div>
     </section>
 
     <section class="tt-screen" data-screen="flight">
@@ -279,18 +279,13 @@ window.openThermalSheet=function(s,state){
  centerThermalSheet();document.getElementById('ttSheetBackdrop').classList.add('open');document.getElementById('ttThermalSheet').classList.add('open');
 };
 let mapSelectedSpot=null,mapSelectedState=null,mapSelectedMarker=null,mapSpotItems=[];
-let mapThermalFilters={mine:true,other:true,explored:true};
-function mapFilterAllows(state){return mapThermalFilters[state]!==false}
-function applyMapThermalFilters(){
- mapSpotItems.forEach(x=>{const show=mapFilterAllows(x.state);if(x.marker&&x.marker.setOpacity)x.marker.setOpacity(show?1:0);const el=x.marker&&x.marker.getElement?x.marker.getElement():null;if(el)el.style.pointerEvents=show?'auto':'none';});
- if(mapSelectedSpot&&!mapFilterAllows(mapSelectedState)){const bounds=flightMap&&flightMap.getBounds?flightMap.getBounds():null;const next=mapSpotItems.find(x=>mapFilterAllows(x.state)&&(!bounds||bounds.contains([x.s._lat,x.s._lon])));if(next)selectMapThermal(next.s,next.state,next.marker);}
-}
 function mapMarkerSize(max){return Math.round(Math.max(30,Math.min(48,30+(Number(max)||0)*3)));}
 function selectMapThermal(s,state,marker){
  mapSelectedSpot=s;mapSelectedState=state;
  if(mapSelectedMarker&&mapSelectedMarker.getElement()){const d=mapSelectedMarker.getElement().querySelector('.tt-map-dot');if(d)d.classList.remove('selected')}
  mapSelectedMarker=marker;if(marker&&marker.getElement()){const d=marker.getElement().querySelector('.tt-map-dot');if(d)d.classList.add('selected')}
  const avg=Number(s.avg_climb)||0,max=Number(s.max_climb)||0,uses=Number(s.flight_count)||1,value=Number(s.value)||thermalPriceFromMax(max);
+ const badge=document.getElementById('mapSelectedBadge');badge.className='tt-map-status '+state;badge.textContent=state==='mine'?'🟢 MEINE THERMIK':state==='other'?'🟡 ANDERER BESITZER':'⚫ KAUFBARE THERMIK';
  document.getElementById('mapSelectedTitle').textContent=s.name||('Thermik #'+s.id);
  document.getElementById('mapSelectedSub').textContent=state==='mine'?'Gehört dir':state==='other'?'Im Besitz eines anderen Piloten':'Noch ohne Besitzer';
  document.getElementById('mapSelectedMax').textContent='+'+max.toFixed(1);
@@ -298,7 +293,7 @@ function selectMapThermal(s,state,marker){
  document.getElementById('mapSelectedValue').textContent=value.toLocaleString('de-DE');
  document.getElementById('mapSelectedUses').textContent=uses;
  const bounds=flightMap&&flightMap.getBounds?flightMap.getBounds():null;
- const visible=mapSpotItems.filter(x=>mapFilterAllows(x.state)&&(!bounds||bounds.contains([x.s._lat,x.s._lon])));
+ const visible=mapSpotItems.filter(x=>(!bounds||bounds.contains([x.s._lat,x.s._lon])));
  const visibleIndex=visible.findIndex(x=>Number(x.s.id)===Number(s.id));
  const canCycle=visible.length>1;
  document.getElementById('mapPrevMine').disabled=!canCycle;
@@ -327,7 +322,7 @@ setTimeout(()=>flightMap.invalidateSize(),100)
 }
 function cycleVisibleThermal(dir){
  const bounds=flightMap&&flightMap.getBounds?flightMap.getBounds():null;
- const visible=mapSpotItems.filter(x=>mapFilterAllows(x.state)&&(!bounds||bounds.contains([x.s._lat,x.s._lon])));if(!visible.length)return;
+ const visible=mapSpotItems.filter(x=>(!bounds||bounds.contains([x.s._lat,x.s._lon])));if(!visible.length)return;
  let idx=visible.findIndex(x=>mapSelectedSpot&&Number(x.s.id)===Number(mapSelectedSpot.id));
  if(idx<0)idx=dir>0?-1:0;idx=(idx+dir+visible.length)%visible.length;
  const item=visible[idx];selectMapThermal(item.s,item.state,item.marker);flightMap.panTo([item.s._lat,item.s._lon]);
@@ -586,7 +581,7 @@ document.getElementById('refreshDiscover').addEventListener('click',loadDiscover
 document.getElementById('refreshPortfolio').addEventListener('click',loadPortfolio);
 document.getElementById('refreshRanking').addEventListener('click',loadRanking);
 document.querySelectorAll('[data-rank-filter]').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('[data-rank-filter]').forEach(x=>x.classList.remove('active'));btn.classList.add('active');rankingFilter=btn.dataset.rankFilter;renderRanking()}));
-root.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.go)));function closeWelcome(openFlight){if(currentUser)localStorage.setItem('tt_welcome_seen_'+currentUser.id,'1');document.getElementById('ttWelcome').style.display='none';if(openFlight)go('flight')}document.getElementById('ttWelcomeStart').addEventListener('click',()=>closeWelcome(true));document.getElementById('ttWelcomeLater').addEventListener('click',()=>closeWelcome(false));document.getElementById('openThermal').addEventListener('click',()=>{if(mapSelectedSpot)window.openThermalSheet(mapSelectedSpot,mapSelectedState);});document.querySelectorAll('[data-map-filter]').forEach(btn=>btn.addEventListener('click',()=>{const key=btn.dataset.mapFilter;mapThermalFilters[key]=!mapThermalFilters[key];btn.classList.toggle('active',mapThermalFilters[key]);applyMapThermalFilters();}));ensureMap();
+root.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.go)));function closeWelcome(openFlight){if(currentUser)localStorage.setItem('tt_welcome_seen_'+currentUser.id,'1');document.getElementById('ttWelcome').style.display='none';if(openFlight)go('flight')}document.getElementById('ttWelcomeStart').addEventListener('click',()=>closeWelcome(true));document.getElementById('ttWelcomeLater').addEventListener('click',()=>closeWelcome(false));document.getElementById('openThermal').addEventListener('click',()=>{if(mapSelectedSpot)window.openThermalSheet(mapSelectedSpot,mapSelectedState);});ensureMap();
 
 function igcFlightDate(text){
  const m=text.match(/^HFDTE(?:DATE:)?(\d{2})(\d{2})(\d{2})/m);if(!m)return null;
